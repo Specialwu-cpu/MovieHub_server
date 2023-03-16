@@ -1,9 +1,5 @@
 package com.moviehub.server.dao;
 
-import com.moviehub.server.entity.user;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-
 /**
  * @Project ：server
  * @File ：IUserDao.java

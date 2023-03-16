@@ -1,9 +1,7 @@
 package com.moviehub.server.service;
 
-import com.moviehub.server.entity.user;
-import org.springframework.stereotype.Service;
+import com.moviehub.server.entity.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +14,7 @@ import java.util.List;
 
 public interface IUserService {
 
-    public user save(String mail_or_id, String user_name, String password);
+//    public User save(String mail_or_id, String user_name, String password);
 
-    public List<user> findAll();
+    public List<User> findAll();
 }
