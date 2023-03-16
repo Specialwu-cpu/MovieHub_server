@@ -1,6 +1,7 @@
 package com.moviehub.server.authorization.resolvers;
 
 import com.moviehub.server.authorization.annotation.CurrentUser;
+import com.moviehub.server.service.IUserService;
 import com.moviehub.server.util.Code;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
