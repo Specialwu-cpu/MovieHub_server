@@ -69,6 +69,9 @@ public class DES {
             //将字符串decode成byte[]
             byte[] firstLayerDecode = str.getBytes(CHARSETNAME);
             byte[] bytes = decoder.decode(firstLayerDecode);
+            if (bytes.length != 8) {
+                return "WrongCode";
+            }
             //获取解密对象
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             //初始化解密信息

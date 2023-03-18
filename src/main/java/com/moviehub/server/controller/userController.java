@@ -28,7 +28,7 @@ public class userController {
     @Resource
     private IVerifyCodeService codeService;
 
-    @RequestMapping("loginWithPassword")
+    @RequestMapping(value = "loginWithPassword", produces = "application/json; charset=UTF-8")
     public Map<String, Object> login(@RequestBody Map<String, String> map) throws JSONException {
         String mail_or_id = map.get("mail_or_id");
         String password = map.get("password");
@@ -57,7 +57,7 @@ public class userController {
 
     }
 
-    @RequestMapping("/register")
+    @RequestMapping(value = "/register", produces = "application/json; charset=UTF-8")
     public Map<String, Object> register(@RequestBody Map<String, String> map) throws Exception {
         String mail_or_id = map.get("mail_or_id");
         String password = map.get("password");
@@ -86,7 +86,7 @@ public class userController {
         return JsonCreater.getJson(newUser);
         //业务逻辑：mail存在了怎么办，password不符合要求怎么办，user_name不符合需求怎么办
     }
-    @RequestMapping("/sendVerifyCode")
+    @RequestMapping(value = "/sendVerifyCode", produces = "application/json; charset=UTF-8")
     @Authorization
     public Map<String, Object> sendVerifyCode(@RequestBody Map<String, String> map, HttpServletRequest request) throws Exception {
         String email = map.get("email");
