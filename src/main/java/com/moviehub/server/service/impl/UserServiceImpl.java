@@ -1,9 +1,11 @@
 package com.moviehub.server.service.impl;
 
+import com.moviehub.server.authorization.annotation.Authorization;
 import com.moviehub.server.entity.user;
 import com.moviehub.server.repository.UserRepository;
 import com.moviehub.server.service.IUserService;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +42,6 @@ public class UserServiceImpl implements IUserService {
             return aNewUser;
         }
         else {
-            System.out.printf("呜呼呜呼");
             return null;
         }
     }
@@ -49,5 +50,33 @@ public class UserServiceImpl implements IUserService {
     public List<user> findAll() {
         System.out.println("我在service" + userRepository.findAll());
         return userRepository.findAll();
+    }
+
+    @Override
+    public boolean emailInDatabase(String mail_or_id) {
+
+        return userRepository.findById(mail_or_id).isPresent();
+    }
+
+    @Override
+    public List<user> emailPasswordLogin(String mail_or_id, String password) {
+        return userRepository.findByMail_or_idAndPassword(mail_or_id, password);
+    }
+
+
+    @Override
+    public boolean invalidPassword(String password) {
+        if (password.length() < 6 || password.length() > 255){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean invalidUserName(String userName) {
+        if (userName.length() < 5 || userName.length() > 255) {
+            return true;
+        }
+        return false;
     }
 }

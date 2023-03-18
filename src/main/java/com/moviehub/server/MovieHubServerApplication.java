@@ -10,8 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 
-@SpringBootApplication(exclude= {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-//@EnableJpaRepositories(basePackages = {"com.moviehub.server.repository"})
+@SpringBootApplication()
 public class MovieHubServerApplication {
 
     public static void main(String[] args) {

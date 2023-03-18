@@ -6,17 +6,12 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "user", catalog = "MovieHub")
+@Table(name = "user")
 //@TableName("user")
 public class user {
-    public user(String mail_or_id, String user_name, String password) {
-        this.mail_or_id = mail_or_id;
-        this.user_name = user_name;
-        this.password = password;
-    }
 
     @Id
-    @Column(name = "mail_or_id",length = 10)
+    @Column(name = "mail_or_id")
     private String mail_or_id;
     @Column(name = "user_name")
     private String user_name;

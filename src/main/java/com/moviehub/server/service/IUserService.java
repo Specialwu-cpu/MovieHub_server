@@ -19,4 +19,12 @@ public interface IUserService {
     public user save(String mail_or_id, String user_name, String password);
 
     public List<user> findAll();
+
+    public boolean emailInDatabase(String mail_or_id);
+
+    public List<user> emailPasswordLogin(String mail_or_id, String password);
+
+    public boolean invalidPassword(String password);
+
+    public boolean invalidUserName(String userName);
 }
