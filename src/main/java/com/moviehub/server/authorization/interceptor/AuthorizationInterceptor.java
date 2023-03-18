@@ -11,6 +11,8 @@ import com.moviehub.server.authorization.annotation.Authorization;
 import com.moviehub.server.util.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,16 +22,21 @@ import redis.clients.jedis.Jedis;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
 public class AuthorizationInterceptor implements HandlerInterceptor {
+
+
+
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException, JSONException {
 
         //只拦截method
         if (!(handler instanceof HandlerMethod)) {
@@ -47,6 +54,22 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         String[] attributions = DES.getDecryptString(token).split(",");
 
         if (attributions.length != 4) {
+            response.setStatus(ResponeCode.UNAUTHORIZED.value);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("code", ResponeCode.UNAUTHORIZED.value);
+            jsonObject.put("msg", ResponeCode.UNAUTHORIZED.msg);
+            jsonObject.put("data", null);
+
+            response.setCharacterEncoding("UTF-8");
+
+            response.setContentType("application/json; charset=utf-8");
+
+            PrintWriter out = response.getWriter();
+            out.write(jsonObject.toString());
+           // response.sendRedirect("user/loginWithPassword.html");
+            out.flush();
+            out.close();
+
             return false;
         }
         String email = attributions[0];
@@ -59,6 +82,22 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
 
         if (!compareKey.equals("MOVIEHUB")) {
+            response.setStatus(ResponeCode.UNAUTHORIZED.value);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("code", ResponeCode.UNAUTHORIZED.value);
+            jsonObject.put("msg", ResponeCode.UNAUTHORIZED.msg);
+            jsonObject.put("data", null);
+
+            response.setCharacterEncoding("UTF-8");
+
+            response.setContentType("application/json; charset=utf-8");
+
+            PrintWriter out = response.getWriter();
+            out.write(jsonObject.toString());
+          //  response.sendRedirect("user/loginWithPassword.html");
+            out.flush();
+            out.close();
+
             return false;
         }
 
@@ -93,6 +132,21 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             }
             else {
                 //没有了  这边要跳转到登录界面了
+                response.setStatus(ResponeCode.UNAUTHORIZED.value);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("code", ResponeCode.UNAUTHORIZED.value);
+                jsonObject.put("msg", ResponeCode.UNAUTHORIZED.msg);
+                jsonObject.put("data", null);
+
+                response.setCharacterEncoding("UTF-8");
+
+                response.setContentType("application/json; charset=utf-8");
+
+                PrintWriter out = response.getWriter();
+                out.write(jsonObject.toString());
+            //    response.sendRedirect("user/loginWithPassword.html");
+                out.flush();
+                out.close();
 
                 return false;
             }
