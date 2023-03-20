@@ -37,7 +37,6 @@ public class JsonCreater {
             json.put("msg", ResponeCode.FAIL.msg);
             json.put("data", null);
         }
-
         json.put("code", ResponeCode.SUCCESS.value);
         json.put("msg", ResponeCode.SUCCESS.msg);
         json.put("data", data);

@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-
-public class VerifyCodeImplService implements IVerifyCodeService {
+public class VerifyCodeServiceImpl implements IVerifyCodeService {
 
     @Resource
     private VerifyCodeRepository repository;
@@ -23,19 +22,19 @@ public class VerifyCodeImplService implements IVerifyCodeService {
             //发送成功了要 记到表里面为了后来   是否注册成功查询用
             if (success) {
                 verifyCodeTable verifyCodeRecord = new verifyCodeTable();
-
                 verifyCodeRecord.setRegister_id(toEmail);
                 verifyCodeRecord.setVerify_code(thisCode);
                 verifyCodeRecord.setCode_time(TimeManager.getNowDateTime());
-
                 repository.save(verifyCodeRecord);
-
-                return true;//发送成功
+                return true;
+                //发送成功
             }
-            return false;//代表发送不成功
+            return false;
+            //代表发送不成功
         }
         System.out.println("666");
-        return false;//代表不是邮箱
+        return false;
+        //代表不是邮箱
     }
 
     @Override
@@ -48,7 +47,6 @@ public class VerifyCodeImplService implements IVerifyCodeService {
         if (!verifyCode.equals(verifyCodeRecode.getVerify_code())) {
             return true;
         }
-
         if (TimeManager.getLapseHitherto(verifyCodeRecode.getCode_time()) > 3000) {
             return true;
         }

@@ -1,10 +1,12 @@
 package com.moviehub.server.service;
 
-import com.moviehub.server.entity.user;
-import org.springframework.stereotype.Service;
+import com.moviehub.server.entity.User;
+import com.moviehub.server.util.BaseResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Project ：server
@@ -15,14 +17,19 @@ import java.util.List;
  **/
 
 public interface IUserService {
+    public BaseResponse login(String mail_or_id, String password);
 
-    public user save(String mail_or_id, String user_name, String password);
+    BaseResponse register(String mail_or_id, String password, String user_name, String verify_code);
 
-    public List<user> findAll();
+    BaseResponse sendVerifyCode(String email);
+
+    public User save(String mail_or_id, String user_name, String password);
+
+    public List<User> findAll();
 
     public boolean emailInDatabase(String mail_or_id);
 
-    public List<user> emailPasswordLogin(String mail_or_id, String password);
+    public List<User> emailPasswordLogin(String mail_or_id, String password);
 
     public boolean invalidPassword(String password);
 

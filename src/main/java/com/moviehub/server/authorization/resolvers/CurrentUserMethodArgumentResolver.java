@@ -3,7 +3,7 @@ package com.moviehub.server.authorization.resolvers;
 import com.moviehub.server.authorization.annotation.CurrentUser;
 import com.moviehub.server.service.IUserService;
 import com.moviehub.server.util.Code;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -20,8 +20,8 @@ import java.util.Iterator;
  * @date 2023/3/14.
  */
 public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
-    @Autowired
-    private IUserService userService;
+    @Resource
+    private IUserService iUserService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -40,6 +40,7 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
         Iterator<String> s = webRequest.getHeaderNames();
         if(token != null){
             //从数据库中查询并返回
+            // TODO: 2023/3/18 改为从Redis中查询并返回
 //            return userService.getUserByToken(token);
             return null;
         }else{

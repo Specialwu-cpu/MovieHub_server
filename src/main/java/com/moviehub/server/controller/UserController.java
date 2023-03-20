@@ -1,35 +1,37 @@
 package com.moviehub.server.controller;
 
-import com.moviehub.server.entity.User;
+import com.moviehub.server.authorization.annotation.Authorization;
 import com.moviehub.server.service.IUserService;
+import com.moviehub.server.service.IVerifyCodeService;
+import com.moviehub.server.util.*;
+//import io.swagger.annotations.Api;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
-import java.util.List;
-
+//@Api(tags = "用户接口")
 @RestController
 @RequestMapping("/user")
 public class UserController {
     @Resource
     private IUserService iUserService;
 
-//    @RequestMapping("/register")
-//    public User register(@RequestBody Map<String, String> map) throws SQLException {
-//        String mail_or_id = map.get("mail_or_id");
-//        String password = map.get("password");
-//        String user_name = map.get("user_name");
-//        System.out.println(map);
-//
-//
-//        User yes_or_no = iUserService.save(mail_or_id, user_name, password);
-//        List<User> aaa = iUserService.findAll();
-//        System.out.println(aaa);
-//        return null;
-//        //业务逻辑：mail存在了怎么办，password不符合要求怎么办，user_name不符合需求怎么办
-//    }
+    @Resource
+    private IVerifyCodeService iVerifyCodeService;
 
-    @GetMapping("/findAll")
-    public List<User> findAll() { return iUserService.findAll(); }
+    @PostMapping(value = "loginWithPassword")
+    public BaseResponse login(@RequestBody Map<String, String> map) {
+        return iUserService.login(map.get("mail_or_id"), map.get("password"));
+    }
+
+    @PostMapping(value = "/register")
+    public BaseResponse register(@RequestBody Map<String, String> map) {
+        return iUserService.register(map.get("mail_or_id"), map.get("password"), map.get("user_name"), map.get("verify_code"));
+    }
+
+//    @Authorization
+    @PostMapping(value = "/sendVerifyCode")
+    public BaseResponse sendVerifyCode(@RequestBody Map<String, String> map) {
+        return iUserService.sendVerifyCode(map.get("email"));
+    }
 }
