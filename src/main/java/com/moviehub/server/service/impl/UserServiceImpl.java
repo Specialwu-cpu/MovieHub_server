@@ -89,17 +89,6 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public BaseResponse sendVerifyCode(String email) {
-        boolean a = false;
-        try {
-            a = iVerifyCodeService.sendVerifyCode(email);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return BaseResponse.success(a);
-    }
-
-    @Override
     public User save(String mail_or_id, String user_name, String password) {
         if (mail_or_id != null){
             User aNewUser = new User();

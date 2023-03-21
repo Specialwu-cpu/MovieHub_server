@@ -21,8 +21,6 @@ public interface IUserService {
 
     BaseResponse register(String mail_or_id, String password, String user_name, String verify_code);
 
-    BaseResponse sendVerifyCode(String email);
-
     public User save(String mail_or_id, String user_name, String password);
 
     public List<User> findAll();
