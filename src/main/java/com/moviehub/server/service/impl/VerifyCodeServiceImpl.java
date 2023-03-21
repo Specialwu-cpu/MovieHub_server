@@ -15,7 +15,7 @@ public class VerifyCodeServiceImpl implements IVerifyCodeService {
     @Resource
     private VerifyCodeRepository repository;
     @Override
-    public boolean sendVerifyCode(String toEmail) throws Exception {
+    public BaseResponse sendVerifyCode(String toEmail) throws Exception {
         if (Email.isEmail(toEmail)) {
             String thisCode = verifyCode.getVerifyCode();
             boolean success = Email.sendEmail(thisCode, new String[]{toEmail});
@@ -26,14 +26,14 @@ public class VerifyCodeServiceImpl implements IVerifyCodeService {
                 verifyCodeRecord.setVerify_code(thisCode);
                 verifyCodeRecord.setCode_time(TimeManager.getNowDateTime());
                 repository.save(verifyCodeRecord);
-                return true;
+                return BaseResponse.success("发送成功");
                 //发送成功
             }
-            return false;
+            return BaseResponse.error("邮箱错误");
             //代表发送不成功
         }
         System.out.println("666");
-        return false;
+        return BaseResponse.error("邮箱不存在");
         //代表不是邮箱
     }
 

@@ -32,6 +32,10 @@ public class UserController {
 //    @Authorization
     @PostMapping(value = "/sendVerifyCode")
     public BaseResponse sendVerifyCode(@RequestBody Map<String, String> map) {
-        return iUserService.sendVerifyCode(map.get("email"));
+        try {
+            return iVerifyCodeService.sendVerifyCode(map.get("email"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
