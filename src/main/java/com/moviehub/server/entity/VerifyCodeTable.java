@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @Table(name = "verify_code")
-public class verifyCodeTable {
+public class VerifyCodeTable {
     @Id
     @Column(name = "register_id")
     private String register_id;

@@ -1,5 +1,6 @@
 package com.moviehub.server.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,16 +10,21 @@ import lombok.Data;
 public class User {
 
     @Id
+    @Schema(title = "mail_or_id")
     @Column(name = "mail_or_id")
     private String mail_or_id;
+    @Schema(title = "user_name")
     @Column(name = "user_name")
     private String user_name;
+    @Schema(title = "password")
     @Column(name = "password")
     private String password;
     @Lob
+    @Schema(title = "style_text")
     @Column(columnDefinition="text")
     private String style_text;
     @Lob
+    @Schema(title = "graph")
     @Basic(fetch = FetchType.LAZY)
     @Column(name="graph", columnDefinition="longblob")
     private byte[] graph;
