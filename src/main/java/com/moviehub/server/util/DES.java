@@ -7,11 +7,11 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 public class DES {
-    private static Key key;
+    private static final Key key;
 
-    private static String KEY_STR="myKey";
-    private static String CHARSETNAME="UTF-8";
-    private static String ALGORITHM="DES";
+    private static final String KEY_STR="myKey";
+    private static final String CHARSETNAME="UTF-8";
+    private static final String ALGORITHM="DES";
 
 
     static {

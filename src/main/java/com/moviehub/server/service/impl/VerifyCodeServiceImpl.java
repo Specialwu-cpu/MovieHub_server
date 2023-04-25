@@ -47,9 +47,6 @@ public class VerifyCodeServiceImpl implements IVerifyCodeService {
         if (!verifyCode.equals(verifyCodeRecode.getVerify_code())) {
             return true;
         }
-        if (TimeManager.getLapseHitherto(verifyCodeRecode.getCode_time()) > 3000) {
-            return true;
-        }
-        return false;
+        return TimeManager.getLapseHitherto(verifyCodeRecode.getCode_time()) > 3000;
     }
 }
