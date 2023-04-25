@@ -4,6 +4,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
 
+/**
+ * @Project ：server
+ * @File ：History.java
+ * @IDE ：IntelliJ IDEA
+ * @Author ：wsh ruan
+ * @Date ：2023/3/25 10:11
+ **/
 @Data
 @Entity
 @Table(name = "user")

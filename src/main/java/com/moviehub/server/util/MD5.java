@@ -49,7 +49,7 @@ public class MD5 {
     public static String GetMD5Code(String strObj) {
         String resultString = null;
         try {
-            resultString = new String(strObj);
+            resultString = strObj;
             MessageDigest md = MessageDigest.getInstance("MD5");
             // md.digest() 该函数返回值为存放哈希值结果的byte数组
             resultString = byteToString(md.digest(strObj.getBytes()));
@@ -63,7 +63,7 @@ public class MD5 {
         MD5 getMD5 = new MD5();
         Long time = Calendar.getInstance().getTimeInMillis()/1000;
         System.out.println(time);
-        System.out.println(getMD5.GetMD5Code("1"+"qianYongCloudHospital"+ "1460518770000"));
+        System.out.println(GetMD5Code("1"+"qianYongCloudHospital"+ "1460518770000"));
     }
 
 }

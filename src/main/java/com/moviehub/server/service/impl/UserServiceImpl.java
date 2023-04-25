@@ -126,17 +126,11 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean invalidPassword(String password) {
-        if (password.length() < 6 || password.length() > 255){
-            return true;
-        }
-        return false;
+        return password.length() < 6 || password.length() > 255;
     }
 
     @Override
     public boolean invalidUserName(String userName) {
-        if (userName.length() < 5 || userName.length() > 255) {
-            return true;
-        }
-        return false;
+        return userName.length() < 5 || userName.length() > 255;
     }
 }
