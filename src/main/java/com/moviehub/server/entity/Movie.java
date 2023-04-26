@@ -12,13 +12,15 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "movie")
 @Getter
 @Setter
-public class Movie {
+public class Movie implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "tmdb_id", nullable = false)
