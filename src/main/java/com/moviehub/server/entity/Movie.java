@@ -41,7 +41,7 @@ public class Movie {
     private String overview;
 
     @Column(name = "popularity", nullable = false)
-    private double popularity;
+    private Double popularity;
 
     @Column(name = "poster_path")
     private String posterPath;
@@ -57,21 +57,21 @@ public class Movie {
     private String title;
 
     @Column(name = "revenue")
-    private long revenue;
+    private Long revenue;
 
     @Column(name = "budget")
-    private long budget;
+    private Long budget;
 
     @Column(name = "release_date", nullable = false)
     private LocalDate releaseDate;
 
     @Column(name = "runtime")
-    private int runtime;
+    private Integer runtime;
 
     @Column(name = "vote_average", nullable = false)
-    private float voteAverage;
+    private Float voteAverage;
 
     @Column(name = "vote_count", nullable = false)
-    private int voteCount;
+    private Integer voteCount;
 
 }

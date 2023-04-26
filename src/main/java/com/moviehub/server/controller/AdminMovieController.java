@@ -26,9 +26,9 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/movie")
+@RequestMapping("/admin")
 @Tag(name = "MovieController", description = "MovieController")
-public class MovieController {
+public class AdminMovieController {
 
     @Resource
     private IMovieService iMovieService;
