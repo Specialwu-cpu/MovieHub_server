@@ -25,4 +25,8 @@ public interface MovieRepository extends JpaRepository<Movie, String> {
     @Query(value = "SELECT * FROM movie WHERE MONTH(release_date) = MONTH(CURRENT_DATE()) AND DAY(release_date) = DAY(CURRENT_DATE()) ORDER BY popularity DESC LIMIT 0, 19", nativeQuery = true)
     List<Movie> findTodayMovie();
 
+
+    @Query(value = "select * from movie where original_language = 'cn' order by " +
+            "popularity desc limit ?1 offset ?2", nativeQuery = true)
+    List<Movie> findForRecommendGuest(int size, int offset);
 }

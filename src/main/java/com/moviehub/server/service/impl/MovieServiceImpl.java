@@ -38,30 +38,41 @@ public class MovieServiceImpl implements IMovieService {
 
     //还得想想怎么弄分页瀑布
     @Override
-    public BaseResponse getMovieForVisitor() {
-
-
-        final String key = "movie:three";
+    public BaseResponse getMovieForVisitor(int page) {
+        final String key = "movie:choice_guest_start" + page;
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-        HashMap<String, List<Movie>> data = (HashMap<String, List<Movie>>) valueOperations.get(key);
+        if (page == 0){
+            HashMap<String, List<Movie>> data = (HashMap<String, List<Movie>>) valueOperations.get(key);
 
-        if (data == null){
-            List<Movie> popularMovie = movieRepository.findMovieMostPopular();
-            List<Movie> earnMovie = movieRepository.findMovieMostEarn();
-            List<Movie> todayMovie = movieRepository.findTodayMovie();
+            if (data == null){
+                List<Movie> popularMovie = movieRepository.findMovieMostPopular();
+                List<Movie> earnMovie = movieRepository.findMovieMostEarn();
+                List<Movie> todayMovie = movieRepository.findTodayMovie();
+                List<Movie> recommendMovie = movieRepository.findForRecommendGuest(20, 20 * page);
 
-            data = new HashMap<>();
-            System.out.println("fuck");
-            data.put("Popular", popularMovie);
-            data.put("HighestBox", earnMovie);
-            data.put("Today", todayMovie);
-            valueOperations.set(key, data, 1, TimeUnit.HOURS);
+                data = new HashMap<>();
+                data.put("Popular", popularMovie);
+                data.put("HighestBox", earnMovie);
+                data.put("Today", todayMovie);
+                data.put("Recommend", recommendMovie);
+                valueOperations.set(key, data, 1, TimeUnit.HOURS);
+            }
+            //都给客户端
+
+
+
+            return BaseResponse.success(data);
         }
-        //都给客户端
+        else {
+            List<Movie> data = (List<Movie>) valueOperations.get(key);
+            if (data == null){
+                List<Movie> newData = movieRepository.findForRecommendGuest(20, 20 * page);
+                valueOperations.set(key, newData, 60 - page, TimeUnit.MINUTES);
 
-
-
-        return BaseResponse.success(data);
+                return BaseResponse.success(newData);
+            }
+            return BaseResponse.success(data);
+        }
 
     }
 

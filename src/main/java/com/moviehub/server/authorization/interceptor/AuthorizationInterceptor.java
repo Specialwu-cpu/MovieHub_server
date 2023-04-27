@@ -7,12 +7,16 @@
 // */
 //
 //
+//import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.moviehub.server.authorization.annotation.Authorization;
 //import com.moviehub.server.util.*;
+//import jakarta.annotation.Resource;
 //import jakarta.servlet.http.HttpServletRequest;
 //import jakarta.servlet.http.HttpServletResponse;
 //import org.springframework.boot.configurationprocessor.json.JSONException;
 //import org.springframework.boot.configurationprocessor.json.JSONObject;
+//import org.springframework.data.redis.core.RedisTemplate;
+//import org.springframework.data.redis.core.ValueOperations;
 //import org.springframework.stereotype.Component;
 //import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.method.HandlerMethod;
@@ -35,37 +39,40 @@
 //     * @return true false
 //     * @throws Exception
 //     */
+//    @Resource
+//    private RedisTemplate<String, Object> redisTemplate;
 //    @Override
 //    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 //            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException, JSONException {
 //        //只拦截method
-//        if (!(handler instanceof HandlerMethod)) {
+////        if (!(handler instanceof HandlerMethod)) {
+////            return true;
+////        }
+////        HandlerMethod handlerMethod = (HandlerMethod) handler;
+////        Method method = handlerMethod.getMethod();
+////
+////        //只在有Authorization或RequestMapping注释拦截
+////        if (method.getAnnotation(Authorization.class) == null || method.getAnnotation(RequestMapping.class) == null) {
+////            return true;
+////        }
+//        String token = request.getHeader("token");
+//        if (token == null){
+//            request.setAttribute("isLoggedIn", false);
 //            return true;
 //        }
-//        HandlerMethod handlerMethod = (HandlerMethod) handler;
-//        Method method = handlerMethod.getMethod();
-//
-//        //只在有Authorization或RequestMapping注释拦截
-//        if (method.getAnnotation(Authorization.class) == null || method.getAnnotation(RequestMapping.class) == null) {
-//            return true;
-//        }
-//        String token = request.getHeader(Code.TOKEN);
 //        String[] attributions = DES.getDecryptString(token).split(",");
 //
 //        if (attributions.length != 4) {
-//            response.setStatus(ResponeCode.UNAUTHORIZED.value);
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("code", ResponeCode.UNAUTHORIZED.value);
-//            jsonObject.put("msg", ResponeCode.UNAUTHORIZED.msg);
-//            jsonObject.put("data", null);
-//
-//            response.setCharacterEncoding("UTF-8");
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            String jsonResponse;
 //            response.setContentType("application/json; charset=utf-8");
-//            PrintWriter out = response.getWriter();
-//            out.write(jsonObject.toString());
+//
+//            jsonResponse = objectMapper.writeValueAsString(BaseResponse.error("Token Error! May be Attacked!"));
+//
+//            response.getWriter().write(jsonResponse);
+//
 //           // response.sendRedirect("user/loginWithPassword.html");
-//            out.flush();
-//            out.close();
+//
 //            return false;
 //        }
 //        String email = attributions[0];
@@ -74,32 +81,22 @@
 //        String time = attributions[3];
 //
 //        if (!"MOVIE HUB".equals(compareKey)) {
-//            response.setStatus(ResponeCode.UNAUTHORIZED.value);
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("code", ResponeCode.UNAUTHORIZED.value);
-//            jsonObject.put("msg", ResponeCode.UNAUTHORIZED.msg);
-//            jsonObject.put("data", null);
-//
-//            response.setCharacterEncoding("UTF-8");
-//
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            String jsonResponse;
 //            response.setContentType("application/json; charset=utf-8");
 //
-//            PrintWriter out = response.getWriter();
-//            out.write(jsonObject.toString());
-//          //  response.sendRedirect("user/loginWithPassword.html");
-//            out.flush();
-//            out.close();
+//            jsonResponse = objectMapper.writeValueAsString(BaseResponse.error("Token Error! May be Attacked!"));
+//
+//            response.getWriter().write(jsonResponse);
+//
+//
 //            return false;
 //        }
 //
-//        Jedis jedis = RedisUtil.getJedis();
+//        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
 //        //小于十分钟，在parameterMap里面添加参数，让controller能收到
 //        if (TimeManager.getLapseHitherto(Timestamp.valueOf(time)) < 6000) {
-//            Map<String, String[]> parameterMap = request.getParameterMap();
-//            Method modifyMethod = parameterMap.getClass().getMethod("setLocked",
-//                    boolean.class);
-//            modifyMethod.invoke(parameterMap, false);
-//            parameterMap.put("emailFromParameterMap", new String[] {email});
+//
 //            //更新redis数据库
 //            modifyMethod.invoke(parameterMap, true);
 //            jedis.expire(email, 18000L);
@@ -130,7 +127,7 @@
 //
 //                PrintWriter out = response.getWriter();
 //                out.write(jsonObject.toString());
-////                response.sendRedirect("user/loginWithPassword.html");
+//    //            response.sendRedirect("user/loginWithPassword.html");
 //                out.flush();
 //                out.close();
 //                return false;
@@ -138,4 +135,4 @@
 //        }
 //    }
 //}
-//
+

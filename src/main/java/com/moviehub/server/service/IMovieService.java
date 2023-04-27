@@ -16,5 +16,5 @@ import java.util.Map;
 public interface IMovieService {
     List<Movie> getAllMovies();
 
-    BaseResponse getMovieForVisitor();
+    BaseResponse getMovieForVisitor(int page);
 }
