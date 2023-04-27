@@ -7,6 +7,7 @@ import com.moviehub.server.util.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,18 @@ public class UserController {
 
     @Resource
     private IVerifyCodeService iVerifyCodeService;
+
+    @GetMapping("/{mailOrId}")
+    @Operation(summary = "获取用户信息", description = "根据邮箱或者用户ID获取用户信息")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "获取成功"),
+            @ApiResponse(responseCode = "400", description = "请求参数错误"),
+            @ApiResponse(responseCode = "404", description = "用户不存在"),
+            @ApiResponse(responseCode = "500", description = "服务器内部错误")
+    })
+    public BaseResponse getUserInfo(@PathVariable String mailOrId) {
+        return iUserService.getUserInfo(mailOrId);
+    }
 
     /**
      * @api {Post} /user/loginWithPassword 登录

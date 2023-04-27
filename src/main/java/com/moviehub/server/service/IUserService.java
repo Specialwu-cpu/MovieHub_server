@@ -17,19 +17,21 @@ import java.util.Map;
  **/
 
 public interface IUserService {
-    public BaseResponse login(String mail_or_id, String password);
+    BaseResponse login(String mail_or_id, String password);
 
     BaseResponse register(String mail_or_id, String password, String user_name, String verify_code);
 
-    public User save(String mail_or_id, String user_name, String password);
+    User save(String mail_or_id, String user_name, String password);
 
-    public List<User> findAll();
+    List<User> findAll();
 
-    public boolean emailInDatabase(String mail_or_id);
+    boolean emailInDatabase(String mail_or_id);
 
-    public List<User> emailPasswordLogin(String mail_or_id, String password);
+    List<User> emailPasswordLogin(String mail_or_id, String password);
 
-    public boolean invalidPassword(String password);
+    boolean invalidPassword(String password);
 
-    public boolean invalidUserName(String userName);
+    boolean invalidUserName(String userName);
+
+    BaseResponse getUserInfo(String mailOrId);
 }
