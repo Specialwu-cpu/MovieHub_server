@@ -1,6 +1,7 @@
 package com.moviehub.server.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 /**
  * @Project ：MovieHub-server
@@ -10,13 +11,14 @@ import jakarta.persistence.*;
  * @Date ：2023/4/25 12:36
  **/
 @Entity
+@Getter
 @Table(name = "genre")
 public class Genre {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "genre_id")
-    private Long id;
+    private int id;
 
     @Column(name = "genre_name", length = 255)
     private String name;

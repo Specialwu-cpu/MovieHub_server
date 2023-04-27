@@ -32,4 +32,6 @@ public interface IUserService {
     boolean invalidPassword(String password);
 
     boolean invalidUserName(String userName);
+
+    BaseResponse getUserInfo(String mailOrId);
 }

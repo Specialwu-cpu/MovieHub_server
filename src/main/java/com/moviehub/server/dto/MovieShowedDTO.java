@@ -1,8 +1,8 @@
-package com.moviehub.server.DTO;
+package com.moviehub.server.dto;
 
 import java.time.LocalDate;
 
-public class MovieShowed {
+public class MovieShowedDTO {
     private Long tmdb_id;
     private LocalDate releaseDate;
     private String title;
@@ -10,7 +10,7 @@ public class MovieShowed {
 
     private Float voteAverage;
 
-    public MovieShowed(Long tmdb_id, LocalDate releaseDate, String title, String posterPath, Float voteAverage) {
+    public MovieShowedDTO(Long tmdb_id, LocalDate releaseDate, String title, String posterPath, Float voteAverage) {
         this.tmdb_id = tmdb_id;
         this.releaseDate = releaseDate;
         this.title = title;

@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/")
 @Tag(name = "MovieController", description = "MovieController")
-public class AdminMovieController {
+public class MovieController {
 
     @Resource
     private IMovieService iMovieService;
@@ -46,6 +47,24 @@ public class AdminMovieController {
     public ResponseEntity<List<Movie>> getAllMovies() {
         List<Movie> movies = iMovieService.getAllMovies();
         return new ResponseEntity<>(movies, HttpStatus.OK);
+    }
+
+    @Operation(summary = "movie page", description = "get main page(just like 'choice' in Tencent Video), You can choose" +
+            "the page number.If page number is '0', and it will return the main page(consist of popularity, revenue, today's movie list)" +
+            " I told Li Ziyang at that night in 704. " +
+            "Or it will return the recommendation for guest",
+            parameters = {@Parameter(name = "page", description = "the page you need")})
+    @ApiResponse(responseCode = "200", description = "success!")
+    @GetMapping(value = "/choice")
+    public BaseResponse getMovieForVisitor(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "0") int page){
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        if (isLoggedIn){
+            return BaseResponse.error("nimasile");
+        }
+        else {
+            System.out.println("我喜欢我");
+            return iMovieService.getMovieForVisitor(page);
+        }
     }
 
     @PostMapping("/")

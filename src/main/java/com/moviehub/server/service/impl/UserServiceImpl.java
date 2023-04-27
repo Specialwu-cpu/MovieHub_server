@@ -139,4 +139,10 @@ public class UserServiceImpl implements IUserService {
     public boolean invalidUserName(String userName) {
         return userName.length() < 5 || userName.length() > 255;
     }
+
+    @Override
+    public BaseResponse getUserInfo(String mailOrId) {
+        User user = userRepository.findByMailOrId(mailOrId);
+        return BaseResponse.success(user);
+    }
 }

@@ -1,6 +1,5 @@
 package com.moviehub.server.service.impl;
 
-import com.moviehub.server.DTO.MovieShowed;
 import com.moviehub.server.entity.Movie;
 import com.moviehub.server.repository.MovieRepository;
 import com.moviehub.server.service.IMovieService;
@@ -10,17 +9,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * @Project ：MovieHub-server
  * @File ：MovieServiceImpl.java
  * @IDE ：IntelliJ IDEA
- * @Author ：wsh
+ * @Author ：wsh ruan
  * @Date ：2023/4/25 11:34
  **/
 @Service
