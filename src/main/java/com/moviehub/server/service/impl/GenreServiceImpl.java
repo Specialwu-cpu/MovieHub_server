@@ -13,7 +13,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +41,7 @@ public class GenreServiceImpl implements IGenreService {
     private RedisTemplate<String, Object> redisTemplate;
     @Override
     public List<Movie> getMoviesByGenreName(String genreName) {
+//        final String key = "genre:" + genreName + ":GenreByMovies";
         final String key = "genre:" + genreName + ":movies";
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
         List<Movie> moviesByGenres = (List<Movie>) valueOperations.get(key);
@@ -50,7 +53,7 @@ public class GenreServiceImpl implements IGenreService {
 //                tmdbIds.add(dto.getTmdbId());
 //            }
 //            moviesByGenres = movieRepository.findAllByTmdbIds(tmdbIds);
-            moviesByGenres = genreRepository.findMoviesByGenreName(genreName);
+            moviesByGenres = movieRepository.findMoviesByGenreName(genreName);
             valueOperations.set(key, moviesByGenres, 1, TimeUnit.HOURS);
         }
         return moviesByGenres;

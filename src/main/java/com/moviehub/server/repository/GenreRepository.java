@@ -18,6 +18,6 @@ public interface GenreRepository extends JpaRepository<Genre, String> {
     @Query(value = "select * from genre where genre_name = ?1", nativeQuery = true)
     Genre findByGenreName(String genreName);
 
-    @Query(value = "select * from movie where tmdb_id in (select tmdb_id from genre_and_movie where genre_id = (select id from genre where genre_name = ?1))", nativeQuery = true)
+    @Query(value = "select * from movie where tmdb_id in (select tmdb_id from genre_and_movie where genre_id in (select genre_id from genre where genre_name = ?1))", nativeQuery = true)
     List<Movie> findMoviesByGenreName(String genreName);
 }
