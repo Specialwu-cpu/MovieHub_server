@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,14 @@ public class UserMovieController {
             parameters = {@Parameter(name = "page", description = "the page you need")})
     @ApiResponse(responseCode = "200", description = "success!")
     @GetMapping(value = "/choice")
-    public BaseResponse getMovieForVisitor(@RequestParam(value = "page", defaultValue = "0") int page){
-        return iMovieService.getMovieForVisitor(page);
+    public BaseResponse getMovieForVisitor(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "0") int page){
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        if (isLoggedIn){
+            return BaseResponse.error("nimasile");
+        }
+        else {
+            System.out.println("我喜欢我");
+            return iMovieService.getMovieForVisitor(page);
+        }
     }
 }

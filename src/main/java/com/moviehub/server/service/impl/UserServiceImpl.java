@@ -9,11 +9,14 @@ import com.moviehub.server.util.DES;
 import com.moviehub.server.util.RedisUtil;
 import com.moviehub.server.util.TimeManager;
 import jakarta.annotation.Resource;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -28,6 +31,9 @@ public class UserServiceImpl implements IUserService {
 
     @Resource
     private UserRepository userRepository;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Resource
     private IVerifyCodeService iVerifyCodeService;
@@ -53,9 +59,9 @@ public class UserServiceImpl implements IUserService {
         data.put("token", token);
 
         //设置redis数据库
-        Jedis jedis = RedisUtil.getJedis();
-        jedis.set(takeMail, token);
-        jedis.expire(takeMail, 18000L);
+        ValueOperations<String, Object>valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(takeMail, token, 30, TimeUnit.MINUTES);
+
 //        return JsonCreater.getJson(data);
         return BaseResponse.success(data);
     }
