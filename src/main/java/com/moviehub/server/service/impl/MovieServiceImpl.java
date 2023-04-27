@@ -55,9 +55,6 @@ public class MovieServiceImpl implements IMovieService {
                 valueOperations.set(key, data, 1, TimeUnit.HOURS);
             }
             //都给客户端
-
-
-
             return BaseResponse.success(data);
         }
         else {

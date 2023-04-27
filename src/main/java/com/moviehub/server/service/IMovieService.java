@@ -10,7 +10,7 @@ import java.util.Map;
  * @Project ：MovieHub-server
  * @File ：IMovieService.java
  * @IDE ：IntelliJ IDEA
- * @Author ：wsh
+ * @Author ：wsh ruan
  * @Date ：2023/4/25 11:33
  **/
 public interface IMovieService {
