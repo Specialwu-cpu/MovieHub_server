@@ -28,6 +28,9 @@ public class Crew {
     @Column(name = "job", length = 100)
     private String job;
 
+    @Column(name = "name")
+    private String name;
+
     // constructors, getters and setters
 }
 

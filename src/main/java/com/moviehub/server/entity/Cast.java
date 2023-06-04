@@ -31,6 +31,12 @@ public class Cast {
     @Column(name = "order")
     private int order;
 
+    @Column(name = "credit_url")
+    private String creditUrl;
+
+    @Column(name = "name")
+    private String name;
+
     // 其他属性和方法
 
 }

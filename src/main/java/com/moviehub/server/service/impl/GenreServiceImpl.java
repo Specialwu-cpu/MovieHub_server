@@ -1,6 +1,6 @@
 package com.moviehub.server.service.impl;
 
-import com.moviehub.server.dto.GenreAndMovieDTO;
+//import com.moviehub.server.dto.GenreAndMovieDTO;
 import com.moviehub.server.entity.Genre;
 import com.moviehub.server.entity.Movie;
 import com.moviehub.server.repository.GenreAndMovieRepository;
@@ -35,6 +35,7 @@ public class GenreServiceImpl implements IGenreService {
     @Resource
     private GenreRepository genreRepository;
 
+
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Override
@@ -50,7 +51,7 @@ public class GenreServiceImpl implements IGenreService {
 //                tmdbIds.add(dto.getTmdbId());
 //            }
 //            moviesByGenres = movieRepository.findAllByTmdbIds(tmdbIds);
-            moviesByGenres = genreRepository.findMoviesByGenreName(genreName);
+            moviesByGenres = movieRepository.findMoviesByGenreName(genreName);
             valueOperations.set(key, moviesByGenres, 1, TimeUnit.HOURS);
         }
         return moviesByGenres;

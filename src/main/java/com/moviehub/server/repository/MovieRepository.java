@@ -24,6 +24,8 @@ public interface MovieRepository extends JpaRepository<Movie, String> {
     @Query(value = "SELECT * FROM movie WHERE MONTH(release_date) = MONTH(CURRENT_DATE()) AND DAY(release_date) = DAY(CURRENT_DATE()) ORDER BY popularity DESC LIMIT 0, 19", nativeQuery = true)
     List<Movie> findTodayMovie();
 
+    Movie findByTmdbId(Long tmdbId);
+
 
     @Query(value = "select * from movie where original_language = 'cn' order by " +
             "popularity desc limit ?1 offset ?2", nativeQuery = true)
@@ -31,6 +33,9 @@ public interface MovieRepository extends JpaRepository<Movie, String> {
 
     @Query(value = "SELECT * FROM movie m WHERE m.tmdb_id IN :tmdbIds order by popularity desc limit 0, 19", nativeQuery = true)
     List<Movie> findAllByTmdbIds(@Param("tmdbIds") List<Long> tmdbIds);
+
+    @Query(value = "select * from movie where tmdb_id in (select tmdb_id from genre_and_movie where genre_id = (select genre_id from genre where genre_name = ?1))", nativeQuery = true)
+    List<Movie> findMoviesByGenreName(String genreName);
 
 //    List<Movie> findAllByTmdbIdIn(List<Long> tmdbIds);
 }
