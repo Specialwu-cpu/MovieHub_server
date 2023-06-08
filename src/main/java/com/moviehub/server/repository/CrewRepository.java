@@ -15,7 +15,8 @@ import java.util.List;
  **/
 public interface CrewRepository extends JpaRepository<Crew, String> {
     List<Crew> findByTmdbId(Long tmdbId);
-public interface CrewRepository extends JpaRepository<Crew, String> {
+
     @Query(value = "select * from crew where credit_id = ?1", nativeQuery = true)
     Crew findByCreditId(String creditId);
+
 }

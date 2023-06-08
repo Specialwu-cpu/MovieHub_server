@@ -17,7 +17,6 @@ import java.util.List;
 public interface CreditRepository extends JpaRepository<Credit, String> {
     @Query(value = "select * from credit where credit_id = ?1", nativeQuery = true)
     Credit findByCreditId(String creditId);
-public interface CreditRepository extends JpaRepository<Credit, String> {
 
     @Query(value = "select * from credit where credit_id in (select credit_id from `cast` where tmdb_id = ?1)", nativeQuery = true)
     List<Credit> findByTmdbId(Long tmdbId);
