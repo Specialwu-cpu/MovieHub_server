@@ -25,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/credits")
 @Tag(name = "CastController", description = "CastController")
+@CrossOrigin(origins = "*")
 public class CastController {
 
     @Resource

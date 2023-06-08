@@ -20,4 +20,5 @@ public interface CastRepository extends JpaRepository<Cast, String> {
 
     @Query(value = "select * from cast where credit_id = ?1", nativeQuery = true)
     Cast findByCreditId(String creditId);
+
 }

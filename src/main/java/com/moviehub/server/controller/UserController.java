@@ -17,6 +17,7 @@ import java.util.Map;
 @Tag(name = "UserController", description = "UserController")
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "*")
 public class UserController {
     @Resource
     private IUserService iUserService;

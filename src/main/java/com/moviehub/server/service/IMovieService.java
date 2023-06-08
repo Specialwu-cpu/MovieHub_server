@@ -2,7 +2,9 @@ package com.moviehub.server.service;
 
 import com.moviehub.server.entity.Movie;
 import com.moviehub.server.util.BaseResponse;
+import com.opencsv.exceptions.CsvValidationException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,7 @@ import java.util.Map;
  **/
 public interface IMovieService {
     List<Movie> getAllMovies();
+    BaseResponse getMovieForYou(int page, String email) throws CsvValidationException, IOException;
 
     BaseResponse getMovieForVisitor(int page);
 }
