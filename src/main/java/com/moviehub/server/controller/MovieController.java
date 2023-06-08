@@ -10,6 +10,7 @@ package com.moviehub.server.controller;
 import com.moviehub.server.entity.Movie;
 import com.moviehub.server.service.IMovieService;
 import com.moviehub.server.util.BaseResponse;
+import com.opencsv.exceptions.CsvValidationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -23,12 +24,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/")
 @Tag(name = "MovieController", description = "MovieController")
+@CrossOrigin(origins = "*")
 public class MovieController {
 
     @Resource
@@ -58,6 +61,7 @@ public class MovieController {
     @GetMapping(value = "/choice")
     public BaseResponse getMovieForVisitor(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "0") int page){
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
         if (isLoggedIn){
             return BaseResponse.error("nimasile");
         }
@@ -65,6 +69,10 @@ public class MovieController {
             System.out.println("我喜欢我");
             return iMovieService.getMovieForVisitor(page);
         }
+    }
+    @GetMapping("/IJustBeUsedToTest")
+    public BaseResponse forTest() throws CsvValidationException, IOException {
+        return iMovieService.getMovieForYou(0, "20301138@bjtu.edu.cn");
     }
 
     @PostMapping("/")
@@ -89,6 +97,7 @@ public class MovieController {
         return null;
 //        return iMovieService.addMovie(map);
     }
+
 
 //    @PutMapping("/{id}")
 //    @Operation(summary = "Update a movie",

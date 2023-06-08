@@ -4,14 +4,12 @@ import com.moviehub.server.service.ISingleMovieService;
 import com.moviehub.server.util.BaseResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/singleMovie")
 @Tag(name = "SingleMovieController", description = "SingleMovieController")
+@CrossOrigin(origins = "*")
 public class SingleMovieController {
     @Resource
     private ISingleMovieService singleMovieService;

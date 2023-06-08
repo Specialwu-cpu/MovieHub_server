@@ -87,7 +87,7 @@ public class DES {
     }
 
     public static void main(String[] args) {
-        String s1 = DES.getEncryptString("ruanzaishengzhendehenshuai");
+        String s1 = DES.getEncryptString("ruanzaishengzhendehenshuai,nima,sile");
         System.out.println(DES.getDecryptString(s1));
     }
 }

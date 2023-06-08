@@ -13,7 +13,6 @@ import com.moviehub.server.util.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -44,7 +43,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     private RedisTemplate<String, Object> redisTemplate;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws IOException, JSONException {
+            throws IOException {
         //只拦截method
 //        if (!(handler instanceof HandlerMethod)) {
 //            return true;
@@ -61,8 +60,11 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             request.setAttribute("isLoggedIn", false);
             return true;
         }
+        System.out.println(token);
         String[] attributions = DES.getDecryptString(token).split(",");
-
+        for (int i = 0; i < attributions.length; i++) {
+            System.out.println(attributions[i]);
+        }
         if (attributions.length != 4) {
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonResponse;
@@ -98,6 +100,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         //小于十分钟，在parameterMap里面添加参数，让controller能收到
         if (TimeManager.getLapseHitherto(Timestamp.valueOf(time)) < 6000) {
             request.setAttribute("isLoggedIn", true);
+            request.setAttribute("email", email);
             //更新redis数据库
             valueOperations.set(email, token, 30, TimeUnit.MINUTES);
             return true;
@@ -107,6 +110,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             if (valueOperations.get(email) != null) {
                 valueOperations.set(email, token, 30, TimeUnit.MINUTES);
                 request.setAttribute("isLoggedIn", true);
+                request.setAttribute("email", email);
                 return true;
             }
             else {
