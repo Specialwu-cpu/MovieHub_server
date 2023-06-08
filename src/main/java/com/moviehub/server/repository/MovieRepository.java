@@ -35,4 +35,10 @@ public interface MovieRepository extends JpaRepository<Movie, String> {
 //    List<Movie> findAllByTmdbIdIn(List<Long> tmdbIds);
     @Query(value = "select * from movie where tmdb_id in (select tmdb_id from genre_and_movie where genre_id in (select genre_id from genre where genre_name = ?1)) ORDER BY popularity DESC LIMIT 0, 19", nativeQuery = true)
     List<Movie> findMoviesByGenreName(String genreName);
+
+    @Query(value = "select * from movie where tmdb_id = ?1", nativeQuery = true)
+    List<Movie> findMoviesByCast(Long tmdbId);
+
+    @Query(value = "select * from movie where tmdb_id = ?1", nativeQuery = true)
+    List<Movie> findMoviesByCrew(Long tmdbId);
 }

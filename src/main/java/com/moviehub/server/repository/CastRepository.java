@@ -20,7 +20,4 @@ public interface CastRepository extends JpaRepository<Cast, String> {
 
     @Query(value = "select * from cast where credit_id = ?1", nativeQuery = true)
     Cast findByCreditId(String creditId);
-
-    @Query(value = "select * from movie where tmdb_id = ?1", nativeQuery = true)
-    List<Movie> findMoviesByTmdbId(Long tmdbId);
 }

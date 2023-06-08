@@ -23,7 +23,7 @@ import java.util.List;
  * @Date ：2023/4/27 18:12
  **/
 @RestController
-@RequestMapping("/")
+@RequestMapping("/credits")
 @Tag(name = "CastController", description = "CastController")
 public class CastController {
 
