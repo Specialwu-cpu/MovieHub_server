@@ -1,6 +1,5 @@
 package com.moviehub.server.controller;
 
-import com.moviehub.server.authorization.annotation.Authorization;
 import com.moviehub.server.service.IUserService;
 import com.moviehub.server.service.IVerifyCodeService;
 import com.moviehub.server.util.*;
@@ -10,11 +9,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@Tag(name = "UserController", description = "UserController")
+@Tag(name = "UserController", description = "用户操作接口")
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "*")
@@ -25,7 +25,7 @@ public class UserController {
     @Resource
     private IVerifyCodeService iVerifyCodeService;
 
-    @GetMapping("/{mailOrId}")
+    @GetMapping("/getUserInfo")
     @Operation(summary = "获取用户信息", description = "根据邮箱或者用户ID获取用户信息")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "获取成功"),
@@ -33,8 +33,16 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "用户不存在"),
             @ApiResponse(responseCode = "500", description = "服务器内部错误")
     })
-    public BaseResponse getUserInfo(@PathVariable String mailOrId) {
-        return iUserService.getUserInfo(mailOrId);
+    public BaseResponse getUserInfo(HttpServletRequest request) {
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return BaseResponse.error("nimasile");
+        }
+        else {
+            System.out.println("我喜欢我");
+            return iUserService.getUserInfo(email);
+        }
     }
 
     /**
@@ -116,6 +124,26 @@ public class UserController {
         return iUserService.register(map.get("mail_or_id"), map.get("password"), map.get("user_name"), map.get("verify_code"));
     }
 
+    @PostMapping("/reset-password")
+    @Operation(summary = "重置密码", description = "重置用户密码")
+    public BaseResponse resetPassword(HttpServletRequest request, @RequestBody Map<String, String> map) {
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return BaseResponse.error("nimasile");
+        }
+        else {
+            System.out.println("我喜欢我");
+            return iUserService.resetPassword(email, map.get("oldPasswordOne"), map.get("oldPasswordTwo"), map.get("newPassword"));
+        }
+    }
+
+    @PostMapping("/forget-password")
+    @Operation(summary = "忘记密码", description = "重置用户密码")
+    public BaseResponse forgetPassword(@RequestBody Map<String, String> map) {
+        return iUserService.forgetPassword(map.get("mail_or_id"), map.get("newPasswordOne"), map.get("newPasswordTwo"), map.get("verify_code"));
+    }
+
     //    @Authorization
     @Operation(summary = "sendVerifyCode", description = "send verify code to email",
             parameters = {@Parameter(name = "email", description = "email")})
@@ -128,6 +156,102 @@ public class UserController {
             return iVerifyCodeService.sendVerifyCode(map.get("email"));
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("/{mailOrId}/history")
+    @Operation(summary = "查看用户历史记录", description = "根据用户ID查看用户的历史记录")
+    public BaseResponse getUserHistory(
+            HttpServletRequest request,
+            @RequestParam(value = "page") int page) {
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return BaseResponse.error("nimasile");
+        }
+        else {
+            System.out.println("我喜欢我");
+            return iUserService.getUserHistory(email, page);
+        }
+    }
+
+    @PostMapping("/{mailOrId}/history/{tmdbId}")
+    @Operation(summary = "添加历史记录", description = "为用户添加历史记录")
+    public BaseResponse addUserHistory(
+            HttpServletRequest request,
+            @PathVariable("tmdbId") Long tmdbId) {
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return BaseResponse.error("nimasile");
+        }
+        else {
+            System.out.println("我喜欢我");
+            return iUserService.addUserHistory(email, tmdbId);
+        }
+    }
+
+    @DeleteMapping("/{mailOrId}/history/{historyId}")
+    @Operation(summary = "删除历史记录", description = "删除用户的历史记录")
+    public BaseResponse deleteUserHistory(
+            HttpServletRequest request,
+            @PathVariable("historyId") Long historyId) {
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return BaseResponse.error("nimasile");
+        }
+        else {
+            System.out.println("我喜欢我");
+            return iUserService.deleteUserHistory(email, historyId);
+        }
+    }
+
+    @GetMapping("/{mailOrId}/collection")
+    @Operation(summary = "查看用户收藏记录", description = "根据用户ID查看用户的收藏记录")
+    public BaseResponse getUserCollection(
+            HttpServletRequest request,
+            @RequestParam(value = "page") int page) {
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return BaseResponse.error("nimasile");
+        }
+        else {
+            System.out.println("我喜欢我");
+            return iUserService.getUserCollection(email, page);
+        }
+    }
+
+    @PostMapping("/{mailOrId}/collection/{tmdbId}")
+    @Operation(summary = "添加收藏记录", description = "为用户添加收藏记录")
+    public BaseResponse addUserCollection(
+            HttpServletRequest request,
+            @PathVariable("tmdbId") Long tmdbId) {
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return BaseResponse.error("nimasile");
+        }
+        else {
+            System.out.println("我喜欢我");
+            return iUserService.addUserCollection(email, tmdbId);
+        }
+    }
+
+    @DeleteMapping("/{mailOrId}/collection/{collectionId}")
+    @Operation(summary = "删除收藏记录", description = "删除用户的收藏记录")
+    public BaseResponse deleteUserCollection(
+            HttpServletRequest request,
+            @PathVariable("collectionId") Long collectionId) {
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return BaseResponse.error("nimasile");
+        }
+        else {
+            System.out.println("我喜欢我");
+            return iUserService.deleteUserCollection(email, collectionId);
         }
     }
 }

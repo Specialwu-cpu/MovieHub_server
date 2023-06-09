@@ -48,7 +48,6 @@ public class MovieServiceImpl implements IMovieService {
         return null;
     }
 
-    //还得想想怎么弄分页瀑布
     @Override
     public BaseResponse getMovieForYou(int page, String email) throws CsvValidationException, IOException {
         final String key = "gay_feature:" + email;
