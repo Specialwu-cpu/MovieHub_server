@@ -54,7 +54,7 @@ public interface IUserService {
 
     BaseResponse forgetPassword(String mailOrId, String newPasswordOne, String newPasswordTwo, String verifyCode);
 
-    BaseResponse updateUser(String mailOrId, String userName, String styleText, MultipartFile file);
+    BaseResponse updateUser(String mailOrId, String userName, String styleText, byte[] file);
 
     BaseResponse updateAvatar(String mailOrId, MultipartFile file);
 }

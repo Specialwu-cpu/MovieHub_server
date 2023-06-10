@@ -56,7 +56,7 @@ public class UserController {
     @PutMapping("/change/info")
     public BaseResponse updateUser(
             HttpServletRequest request,
-            @RequestParam("file") MultipartFile file,
+            @RequestParam("file") byte[] file,
             @RequestParam("user_name") String user_name,
             @RequestParam("style_text") String style_text) {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
@@ -196,7 +196,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{mailOrId}/history")
+    @GetMapping("/history")
     @Operation(summary = "查看用户历史记录", description = "根据用户ID查看用户的历史记录")
     public BaseResponse getUserHistory(
             HttpServletRequest request,
@@ -212,7 +212,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/{mailOrId}/history/{tmdbId}")
+    @PostMapping("/history/{tmdbId}")
     @Operation(summary = "添加历史记录", description = "为用户添加历史记录")
     public BaseResponse addUserHistory(
             HttpServletRequest request,
@@ -228,7 +228,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{mailOrId}/history/{historyId}")
+    @DeleteMapping("/history/{historyId}")
     @Operation(summary = "删除历史记录", description = "删除用户的历史记录")
     public BaseResponse deleteUserHistory(
             HttpServletRequest request,
@@ -244,7 +244,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{mailOrId}/collection")
+    @GetMapping("/collection")
     @Operation(summary = "查看用户收藏记录", description = "根据用户ID查看用户的收藏记录")
     public BaseResponse getUserCollection(
             HttpServletRequest request,
@@ -260,7 +260,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/{mailOrId}/collection/{tmdbId}")
+    @PostMapping("/collection/{tmdbId}")
     @Operation(summary = "添加收藏记录", description = "为用户添加收藏记录")
     public BaseResponse addUserCollection(
             HttpServletRequest request,
@@ -276,7 +276,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{mailOrId}/collection/{collectionId}")
+    @DeleteMapping("/collection/{collectionId}")
     @Operation(summary = "删除收藏记录", description = "删除用户的收藏记录")
     public BaseResponse deleteUserCollection(
             HttpServletRequest request,
