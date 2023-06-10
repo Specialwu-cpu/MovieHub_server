@@ -6,4 +6,6 @@ public interface ISingleMovieService {
 
 
     BaseResponse getSingleMovie(Long tmdb_id);
+
+    BaseResponse rateSingleMovie(String email, Long tmdb_id, float rate);
 }

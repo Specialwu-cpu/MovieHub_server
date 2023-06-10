@@ -59,14 +59,13 @@ public class MovieController {
             parameters = {@Parameter(name = "page", description = "the page you need")})
     @ApiResponse(responseCode = "200", description = "success!")
     @GetMapping(value = "/choice")
-    public BaseResponse getMovieForVisitor(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "0") int page){
+    public BaseResponse getMovieForVisitor(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "0") int page) throws CsvValidationException, IOException {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return BaseResponse.error("nimasile");
+            return iMovieService.getMovieForYou(page, email);
         }
         else {
-            System.out.println("我喜欢我");
             return iMovieService.getMovieForVisitor(page);
         }
     }

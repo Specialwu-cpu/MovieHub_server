@@ -6,6 +6,7 @@ import com.moviehub.server.service.ISingleMovieService;
 import com.moviehub.server.util.BaseResponse;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,14 @@ public class SingleMovieImpl implements ISingleMovieService {
 
     @Resource
     private CreditRepository creditRepository;
+
+    @Resource
+    private RatingRepository ratingRepository;
+
+    @Resource
+    private UserFeatureRepository userFeatureRepository;
+
+
 
 
 
@@ -69,6 +78,23 @@ public class SingleMovieImpl implements ISingleMovieService {
         return BaseResponse.success(data);
 
 
+
+    }
+
+    @Transactional
+    @Override
+    public BaseResponse rateSingleMovie(String email, Long tmdb_id, float rate) {
+        Rating rating = new Rating();
+        rating.setIdOrMail(email);
+        rating.setTmdbId(tmdb_id);
+        rating.setRating(rate);
+        ratingRepository.save(rating);
+        List<Genre> thisMovieGenres = genreRepository.findByTmdbId(tmdb_id);
+        for (int i = 0; i < thisMovieGenres.size(); i++) {
+            int genreId = thisMovieGenres.get(i).getId();
+            userFeatureRepository.updateGenreN(genreId, email);
+        }
+        return BaseResponse.success("Rating successfully!");
 
     }
 }

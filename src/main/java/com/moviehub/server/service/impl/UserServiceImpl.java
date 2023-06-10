@@ -4,18 +4,21 @@ import com.moviehub.server.entity.User;
 import com.moviehub.server.repository.UserRepository;
 import com.moviehub.server.service.IUserService;
 import com.moviehub.server.service.IVerifyCodeService;
-import com.moviehub.server.util.BaseResponse;
-import com.moviehub.server.util.DES;
-import com.moviehub.server.util.RedisUtil;
-import com.moviehub.server.util.TimeManager;
+import com.moviehub.server.util.*;
 import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
@@ -39,31 +42,59 @@ public class UserServiceImpl implements IUserService {
     private IVerifyCodeService iVerifyCodeService;
 
     @Override
-    public BaseResponse login(String mail_or_id, String password) {
+    public BaseResponse login(String mail_or_id, String password) throws IllegalBlockSizeException, BadPaddingException {
         if (!emailInDatabase(mail_or_id)) {
 //            return JsonCreater.getJson(ResponeCode.BadGateway.value, null, "该账号未注册");
             return BaseResponse.error("该账号未注册");
         }
-        List<User> theUser = emailPasswordLogin(mail_or_id, password);
-        if (theUser.isEmpty()){
-//            return JsonCreater.getJson(ResponeCode.BadGateway.value, null, "该账号密码错误");
-            return BaseResponse.error("该账号密码错误");
+        ValueOperations<String, Object> nonceOfUser = redisTemplate.opsForValue();
+        String key = mail_or_id + "nonce";
+        if (password == null) {
+
+            String nonce = NonceGenerator.generateNonce();
+            User user = userRepository.findByMailOrId(mail_or_id);
+            String cipherText = SHA256Encryptor.getCipherText(nonce + user.getPassword());
+            nonceOfUser.set(key, cipherText, 5, TimeUnit.MINUTES);
+
+            return BaseResponse.success(nonce);
         }
-        User thisUser = theUser.get(0);
-        String takeMail = thisUser.getMail_or_id();
-        String takePassword = thisUser.getPassword();
-        String key = "MOVIE HUB";
-        String now = TimeManager.getNowDateTime().toString();
-        String token = DES.getEncryptString(takeMail + "," + takePassword + "," + key + "," + now);
-        HashMap<String, String> data = new HashMap<>();
-        data.put("token", token);
-
-        //设置redis数据库
-        ValueOperations<String, Object>valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(takeMail, token, 30, TimeUnit.MINUTES);
-
-//        return JsonCreater.getJson(data);
-        return BaseResponse.success(data);
+        else {
+            String ciphertext = (String) nonceOfUser.get(key);
+            if (Objects.equals(ciphertext, password)) {
+                //成功登录后，1.用aes生成token2.用安全信道返回token3.初始化user_feature（从数据库中提取存入leveldb？或者redis）4.token存入缓存5.返回登录成功
+                String now = TimeManager.getNowDateTime().toString();
+                String message = now + "," + mail_or_id;
+                String token = AESEncryptor.cipher(message);
+                System.out.println(message);
+                System.out.println(token);
+                HashMap<String, String> data = new HashMap<>();
+                data.put("token", token);
+                nonceOfUser.set(mail_or_id + "token", token, 30, TimeUnit.MINUTES);
+                return BaseResponse.success(data);
+            }
+            else {
+                return BaseResponse.error("Wrong Password!");
+            }
+        }
+//        List<User> theUser = emailPasswordLogin(mail_or_id, password);
+//        if (theUser.isEmpty()){
+////            return JsonCreater.getJson(ResponeCode.BadGateway.value, null, "该账号密码错误");
+//            return BaseResponse.error("该账号密码错误");
+//        }
+//        User thisUser = theUser.get(0);
+//        String takeMail = thisUser.getMail_or_id();
+//        String takePassword = thisUser.getPassword();
+//        String now = TimeManager.getNowDateTime().toString();
+//        String token = DES.getEncryptString(takeMail + "," + takePassword + "," + key + "," + now);
+//        HashMap<String, String> data = new HashMap<>();
+//        data.put("token", token);
+//
+//        //设置redis数据库
+//        ValueOperations<String, Object>valueOperations = redisTemplate.opsForValue();
+//        valueOperations.set(takeMail, token, 30, TimeUnit.MINUTES);
+//
+////        return JsonCreater.getJson(data);
+//        return BaseResponse.success(data);
     }
 
     @Override

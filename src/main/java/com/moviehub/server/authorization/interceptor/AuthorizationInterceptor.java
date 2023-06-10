@@ -22,10 +22,16 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import redis.clients.jedis.Jedis;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -43,7 +49,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     private RedisTemplate<String, Object> redisTemplate;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws IOException {
+            throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         //只拦截method
 //        if (!(handler instanceof HandlerMethod)) {
 //            return true;
@@ -61,11 +67,11 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             return true;
         }
         System.out.println(token);
-        String[] attributions = DES.getDecryptString(token).split(",");
+        String[] attributions = AESEncryptor.decipher(token).split(",");
         for (int i = 0; i < attributions.length; i++) {
             System.out.println(attributions[i]);
         }
-        if (attributions.length != 4) {
+        if (attributions.length != 2) {
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonResponse;
             response.setContentType("application/json; charset=utf-8");
@@ -78,23 +84,22 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
             return false;
         }
-        String email = attributions[0];
-        String Password = attributions[1];
-        String compareKey = attributions[2];
-        String time = attributions[3];
+        String email = attributions[1];
 
-        if (!"MOVIE HUB".equals(compareKey)) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String jsonResponse;
-            response.setContentType("application/json; charset=utf-8");
+        String time = attributions[0];
 
-            jsonResponse = objectMapper.writeValueAsString(BaseResponse.error("Token Error! May be Attacked!"));
-
-            response.getWriter().write(jsonResponse);
-
-
-            return false;
-        }
+//        if (!"MOVIE HUB".equals(compareKey)) {
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            String jsonResponse;
+//            response.setContentType("application/json; charset=utf-8");
+//
+//            jsonResponse = objectMapper.writeValueAsString(BaseResponse.error("Token Error! May be Attacked!"));
+//
+//            response.getWriter().write(jsonResponse);
+//
+//
+//            return false;
+//        }
 
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
         //小于十分钟，在parameterMap里面添加参数，让controller能收到

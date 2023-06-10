@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @Project ：server
  * @File ：History.java
@@ -35,6 +37,8 @@ public class User {
     @Basic(fetch = FetchType.LAZY)
     @Column(name="graph", columnDefinition="longblob")
     private byte[] graph;
+
+
 
     public User() {
 

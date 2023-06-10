@@ -5,6 +5,11 @@ import com.moviehub.server.util.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +22,7 @@ import java.util.Map;
  **/
 
 public interface IUserService {
-    BaseResponse login(String mail_or_id, String password);
+    BaseResponse login(String mail_or_id, String password) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException;
 
     BaseResponse register(String mail_or_id, String password, String user_name, String verify_code);
 

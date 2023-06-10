@@ -14,6 +14,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "movie")
@@ -75,5 +76,7 @@ public class Movie implements Serializable {
 
     @Column(name = "vote_count", nullable = false)
     private Integer voteCount;
+
+
 
 }

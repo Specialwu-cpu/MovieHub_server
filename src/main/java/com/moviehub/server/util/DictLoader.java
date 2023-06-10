@@ -32,7 +32,6 @@ public class DictLoader {
         while ((line = csvReader.readNext()) != null) {
             float[] thisLine = new float[line.length - 2];
             for (int i = 2; i < line.length; i++){
-                System.out.println(line[i]);
                 thisLine[i - 2] = Float.parseFloat(line[i]);
             }
             data.add(thisLine);

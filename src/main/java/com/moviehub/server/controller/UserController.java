@@ -12,6 +12,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 @Tag(name = "UserController", description = "UserController")
@@ -80,8 +85,8 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "login success")
     @ApiResponse(responseCode = "400", description = "mail_or_id not exist or password error")
     @PostMapping(value = "loginWithPassword")
-    public BaseResponse login(@RequestBody Map<String, String> map) {
-        return iUserService.login(map.get("mail_or_id"), map.get("password"));
+    public BaseResponse login(@RequestBody Map<String, String> map) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        return iUserService.login(map.get("mail_or_id"), map.get("cipherText"));
     }
 
     /**
