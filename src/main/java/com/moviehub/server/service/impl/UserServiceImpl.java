@@ -172,11 +172,11 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public BaseResponse resetPassword(String mailOrId, String oldPasswordOne, String oldPasswordTwo, String newPassword) {
-        if (oldPasswordOne != oldPasswordTwo) {
+        if (!Objects.equals(oldPasswordOne, oldPasswordTwo)) {
             return BaseResponse.error("两次输入密码不一致");
         }
         User user = userRepository.findByMailOrId(mailOrId);
-        if (user.getPassword() != oldPasswordOne) {
+        if (!Objects.equals(user.getPassword(), oldPasswordOne)) {
             return BaseResponse.error("密码错误");
         }
         if (invalidPassword(newPassword)){
@@ -186,9 +186,7 @@ public class UserServiceImpl implements IUserService {
         if (mailOrId != null){
             User aNewUser = new User();
             aNewUser.setMail_or_id(mailOrId);
-            if (newPassword != null){
-                aNewUser.setPassword(newPassword);
-            }
+            aNewUser.setPassword(newPassword);
             userRepository.save(aNewUser);
             return BaseResponse.success("修改密码成功");
         }
@@ -367,8 +365,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public BaseResponse deleteUserHistory(String mailOrId, Long historyId) {
-        UserHistory userHistory = new UserHistory(historyId, mailOrId);
+    public BaseResponse deleteUserHistory(String mailOrId, Long tmdbId) {
+        UserHistory userHistory = new UserHistory(mailOrId, tmdbId);
         userHistoryRepository.delete(userHistory);
         return BaseResponse.success();
     }
@@ -411,8 +409,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public BaseResponse deleteUserCollection(String mailOrId, Long collectionId) {
-        UserCollection userCollection = new UserCollection(collectionId, mailOrId);
+    public BaseResponse deleteUserCollection(String mailOrId, Long tmdbId) {
+        UserCollection userCollection = new UserCollection(mailOrId, tmdbId);
         userCollectionRepository.delete(userCollection);
         return BaseResponse.success();
     }

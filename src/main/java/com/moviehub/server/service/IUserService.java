@@ -42,13 +42,13 @@ public interface IUserService {
 
     BaseResponse addUserHistory(String mailOrId, Long tmdbId);
 
-    BaseResponse deleteUserHistory(String mailOrId, Long historyId);
+    BaseResponse deleteUserHistory(String mailOrId, Long tmdbId);
 
     BaseResponse getUserCollection(String mailOrId, int page);
 
     BaseResponse addUserCollection(String mailOrId, Long tmdbId);
 
-    BaseResponse deleteUserCollection(String mailOrId, Long collectionId);
+    BaseResponse deleteUserCollection(String mailOrId, Long tmdbId);
 
     BaseResponse resetPassword(String mailOrId, String oldPasswordOne, String oldPasswordTwo, String newPassword);
 

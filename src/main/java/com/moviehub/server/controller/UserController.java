@@ -228,15 +228,15 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/history/{historyId}")
+    @DeleteMapping("/history/{tmdbId}")
     @Operation(summary = "删除历史记录", description = "删除用户的历史记录")
     public BaseResponse deleteUserHistory(
             HttpServletRequest request,
-            @PathVariable("historyId") Long historyId) {
+            @PathVariable("tmdbId") Long tmdbId) {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return iUserService.deleteUserHistory(email, historyId);
+            return iUserService.deleteUserHistory(email, tmdbId);
         }
         else {
             System.out.println("我喜欢我");
@@ -276,15 +276,15 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/collection/{collectionId}")
+    @DeleteMapping("/collection/{tmdbId}")
     @Operation(summary = "删除收藏记录", description = "删除用户的收藏记录")
     public BaseResponse deleteUserCollection(
             HttpServletRequest request,
-            @PathVariable("collectionId") Long collectionId) {
+            @PathVariable("tmdbId") Long tmdbId) {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return iUserService.deleteUserCollection(email, collectionId);
+            return iUserService.deleteUserCollection(email, tmdbId);
         }
         else {
             System.out.println("我喜欢我");

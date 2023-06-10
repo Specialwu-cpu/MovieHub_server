@@ -19,7 +19,7 @@ public class InterpreterConfig implements WebMvcConfigurer {
         registry.addInterceptor(authorizationInterceptor).addPathPatterns("/choice");
         registry.addInterceptor(authorizationInterceptor).addPathPatterns("/singleMovie/rate");
         registry.addInterceptor(authorizationInterceptor).addPathPatterns("/singleMovie/comment");
-        registry.addInterceptor(authorizationInterceptor).addPathPatterns("/user/*").excludePathPatterns("/user/loginWithPassword", "/user/register", "/user/forget-password", "user/sendVerifyCode");
+        registry.addInterceptor(authorizationInterceptor).addPathPatterns("/user/**").excludePathPatterns("/user/loginWithPassword", "/user/register", "/user/forget-password", "user/sendVerifyCode");
 
     }
 }

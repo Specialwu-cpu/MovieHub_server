@@ -21,51 +21,46 @@ public class UserCollection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "收藏ID", example = "1")
-    private Long collectionId;
+    private Integer collection_id;
 
     @Schema(description = "用户邮箱或ID", example = "example@example.com")
-    private String mailOrId;
+    private String mail_or_id;
 
     @Schema(description = "TMDB ID", example = "12345")
-    private Long tmdbId;
+    private Long tmdb_id;
 
     // Constructors, getters, and setters
 
     public UserCollection() {
     }
 
-    public UserCollection(String mailOrId, Long tmdbId) {
-        this.mailOrId = mailOrId;
-        this.tmdbId = tmdbId;
+    public UserCollection(String mail_or_id, Long tmdb_id) {
+        this.mail_or_id = mail_or_id;
+        this.tmdb_id = tmdb_id;
     }
 
-    public UserCollection(Long collectionId, String mailOrId) {
-        this.collectionId = collectionId;
-        this.mailOrId = mailOrId;
+    public Integer getCollection_id() {
+        return collection_id;
     }
 
-    public Long getCollectionId() {
-        return collectionId;
+    public void setCollection_id(Integer collection_id) {
+        this.collection_id = collection_id;
     }
 
-    public void setCollectionId(Long collectionId) {
-        this.collectionId = collectionId;
+    public String getMail_or_id() {
+        return mail_or_id;
     }
 
-    public String getMailOrId() {
-        return mailOrId;
+    public void setMail_or_id(String mail_or_id) {
+        this.mail_or_id = mail_or_id;
     }
 
-    public void setMailOrId(String mailOrId) {
-        this.mailOrId = mailOrId;
+    public Long getTmdb_id() {
+        return tmdb_id;
     }
 
-    public Long getTmdbId() {
-        return tmdbId;
-    }
-
-    public void setTmdbId(Long tmdbId) {
-        this.tmdbId = tmdbId;
+    public void setTmdb_id(Long tmdb_id) {
+        this.tmdb_id = tmdb_id;
     }
 }
 
