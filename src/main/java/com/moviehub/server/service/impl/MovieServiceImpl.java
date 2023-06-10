@@ -69,7 +69,7 @@ public class MovieServiceImpl implements IMovieService {
         this.resourceLoader = resourceLoader;
 
 
-        String modelPath = "/usr/local/java/userTower.onnx";
+        String modelPath = "C:\\Users\\DELL\\Desktop\\userTower.onnx";
 
 
         OrtSession.SessionOptions sessionOptions = new OrtSession.SessionOptions();

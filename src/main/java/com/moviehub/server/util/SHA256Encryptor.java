@@ -24,6 +24,6 @@ public class SHA256Encryptor {
     }
 
     public static void main(String[] args) {
-        System.out.println(getCipherText("1051051475452033252628522746770502386945" + "1234569"));
+        System.out.println(getCipherText("687718358774925877508908024320239633236" + "uu1003uu"));
     }
 }

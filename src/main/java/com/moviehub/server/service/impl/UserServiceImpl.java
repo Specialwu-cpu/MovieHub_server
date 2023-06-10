@@ -10,7 +10,6 @@ import com.moviehub.server.service.IUserService;
 import com.moviehub.server.service.IVerifyCodeService;
 import com.moviehub.server.util.*;
 import com.moviehub.server.util.BaseResponse;
-import com.moviehub.server.util.DES;
 import com.moviehub.server.util.TimeManager;
 import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,9 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -228,25 +224,19 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public BaseResponse updateUser(String mailOrId, String userName, String styleText, MultipartFile file) {
+    public BaseResponse updateUser(String mailOrId, String userName, String styleText, byte[] file) {
         User user = userRepository.findByMailOrId(mailOrId);
         if (user == null) {
             return BaseResponse.error("User not found");
         }
         // 处理上传的头像文件
-        try {
-            byte[] avatarBytes = file.getBytes();
-            user.setGraph(avatarBytes);
-            // 可以根据需要对头像进行进一步处理，例如压缩、裁剪等
-            user.setUser_name(userName);
-            user.setStyle_text(styleText);
-            userRepository.save(user);
-            return BaseResponse.success();
-            // 保存更新后的用户信息
-        } catch (IOException e) {
-            e.printStackTrace();
-            return BaseResponse.error("Failed to update avatar");
-        }
+        user.setGraph(file);
+        // 可以根据需要对头像进行进一步处理，例如压缩、裁剪等
+        user.setUser_name(userName);
+        user.setStyle_text(styleText);
+        userRepository.save(user);
+        return BaseResponse.success();
+        // 保存更新后的用户信息
     }
 
     @Override
