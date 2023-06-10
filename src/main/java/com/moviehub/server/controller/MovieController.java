@@ -4,7 +4,7 @@ package com.moviehub.server.controller;
  * @Project ：MovieHub-server
  * @File ：MovieController.java
  * @IDE ：IntelliJ IDEA
- * @Author ：wsh
+ * @Author ：wsh ruan
  * @Date ：2023/4/25 11:29
  **/
 import com.moviehub.server.entity.Movie;
@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +87,6 @@ public class MovieController {
         return iMovieService.getMovieForYou(0, "20301138@bjtu.edu.cn");
     }
 
-    @PostMapping("/")
     @Operation(summary = "Add a movie",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
@@ -102,41 +102,98 @@ public class MovieController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = BaseResponse.class)))
             })
+    @PostMapping("/addmovies")
     public BaseResponse addMovie(
-            @Parameter(description = "The movie to add", required = true)
             @RequestBody Map<String, String> map) {
-        return null;
-//        return iMovieService.addMovie(map);
+//        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+//        String email = (String) request.getAttribute("email");
+//        if (isLoggedIn){
+//            return BaseResponse.error("nimasile");
+//        }
+//        else {
+//            System.out.println("我喜欢我");
+//            return iMovieService.addMovie(
+//                    Boolean.parseBoolean(map.get("adult")),
+//                    map.get("homepage"),
+//                    map.get("original_language"),
+//                    map.get("original_title"),
+//                    map.get("overview"),
+//                    Double.parseDouble(map.get("popularity")),
+//                    map.get("poster_path"),
+//                    map.get("status"),
+//                    map.get("tagline"),
+//                    map.get("title"),
+//                    Long.parseLong(map.get("revenue")),
+//                    Long.parseLong(map.get("budget")),
+//                    LocalDate.parse(map.get("release_date")),
+//                    Integer.parseInt(map.get("runtime")),
+//                    Float.parseFloat(map.get("vote_average")),
+//                    Integer.parseInt(map.get("vote_count")));
+//        }
+        return iMovieService.addMovie(
+                Boolean.parseBoolean(map.get("adult")),
+                map.get("homepage"),
+                map.get("original_language"),
+                map.get("original_title"),
+                map.get("overview"),
+                Double.parseDouble(map.get("popularity")),
+                map.get("poster_path"),
+                map.get("status"),
+                map.get("tagline"),
+                map.get("title"),
+                Long.parseLong(map.get("revenue")),
+                Long.parseLong(map.get("budget")),
+                LocalDate.parse(map.get("release_date")),
+                Integer.parseInt(map.get("runtime")),
+                Float.parseFloat(map.get("vote_average")),
+                Integer.parseInt(map.get("vote_count")));
+//        return null;
     }
 
 
-//    @PutMapping("/{id}")
-//    @Operation(summary = "Update a movie",
-//            parameters = @Parameter(name = "id", description = "The ID of the movie to update", required = true),
-//            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-//                    content = @Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = Movie.class))),
-//            responses = {
-//                    @ApiResponse(responseCode = "200", description = "Update movie successfully",
-//                            content = @Content(mediaType = "application/json",
-//                                    schema = @Schema(implementation = BaseResponse.class))),
-//                    @ApiResponse(responseCode = "400", description = "Invalid movie",
-//                            content = @Content(mediaType = "application/json",
-//                                    schema = @Schema(implementation = BaseResponse.class))),
-//                    @ApiResponse(responseCode = "404", description = "Movie not found",
-//                            content = @Content(mediaType = "application/json",
-//                                    schema = @Schema(implementation = BaseResponse.class))),
-//                    @ApiResponse(responseCode = "500", description = "Internal server error",
-//                            content = @Content(mediaType = "application/json",
-//                                    schema = @Schema(implementation = BaseResponse.class)))
-//            })
-//    public BaseResponse updateMovie(
-//            @Parameter(description = "The ID of the movie to update", required = true)
-//            @PathVariable("id") Long id,
-//            @RequestBody Map<String, String> map) {
+    @PutMapping("/{tmdb_id}/update")
+    @Operation(summary = "Update a movie",
+            parameters = @Parameter(name = "id", description = "The ID of the movie to update", required = true),
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class))),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Update movie successfully",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid movie",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Movie not found",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = BaseResponse.class)))
+            })
+    public BaseResponse updateMovie(
+            @Parameter(description = "The ID of the movie to update", required = true)
+            @PathVariable("tmdb_id") Long tmdbId,
+            @RequestBody Map<String, String> map) {
 //        return null;
-////        return iMovieService.updateMovie(id, map);
-//    }
+        return iMovieService.updateMovie(tmdbId,
+                Boolean.parseBoolean(map.get("adult")),
+                map.get("homepage"),
+                map.get("original_language"),
+                map.get("original_title"),
+                map.get("overview"),
+                Double.parseDouble(map.get("popularity")),
+                map.get("poster_path"),
+                map.get("status"),
+                map.get("tagline"),
+                map.get("title"),
+                Long.parseLong(map.get("revenue")),
+                Long.parseLong(map.get("budget")),
+                LocalDate.parse(map.get("release_date")),
+                Integer.parseInt(map.get("runtime")),
+                Float.parseFloat(map.get("vote_average")),
+                Integer.parseInt(map.get("vote_count")));
+    }
 
     //这个该删。首先没用，其次会影响其他的
 //    @Operation(summary = "Get a movie by tmdb_id")
@@ -145,16 +202,16 @@ public class MovieController {
 //            @Parameter(in = ParameterIn.PATH, description = "The tmdb_id of the movie", required = true)
 //            @PathVariable("tmdb_id") Long tmdbId) {
 //        return null;
-////        return iMovieService.getMovieByTmdbId(tmdbId);
+//        return iMovieService.getMovieByTmdbId(tmdbId);
 //    }
 
-//    @Operation(summary = "Delete a movie by tmdb_id")
-//    @DeleteMapping("/{tmdb_id}")
-//    public ResponseEntity<HttpStatus> deleteMovieByTmdbId(
-//            @Parameter(in = ParameterIn.PATH, description = "The tmdb_id of the movie to delete", required = true)
-//            @PathVariable("tmdb_id") Long tmdbId) {
+    @Operation(summary = "Delete a movie by tmdb_id")
+    @DeleteMapping("/{tmdb_id}/delete")
+    public BaseResponse deleteMovieByTmdbId(
+            @Parameter(in = ParameterIn.PATH, description = "The tmdb_id of the movie to delete", required = true)
+            @PathVariable("tmdb_id") Long tmdbId) {
 //        return null;
-////        return iMovieService.deleteMovieByTmdbId(tmdbId);
-//    }
+        return iMovieService.deleteMovieByTmdbId(tmdbId);
+    }
 
 }
