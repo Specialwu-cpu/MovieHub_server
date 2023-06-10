@@ -87,9 +87,12 @@ public class UserController {
      * }
      * @apiVersion 1.0.0
      */
-    @Operation(summary = "login", description = "login with mail_or_id and password",
+    @Operation(summary = "login", description = "login with mail_or_id and password, you should send me request twice time. First time" +
+            " with 'mail_or_id'. and i will return you a 'nonce', you should concat nonce with password and use SHA256 hash function" +
+            "to generate a cipherText. Second time, you should send me two parameters, one of which is 'mail_or_id', and another is " +
+            "'cipherText', i will return you token and it should be used to identify your identity",
             parameters = {@Parameter(name = "mail_or_id", description = "mail or id"),
-                    @Parameter(name = "password", description = "password")})
+                    @Parameter(name = "cipherText", description = "SHA256(nonce + password)")})
     @ApiResponse(responseCode = "200", description = "login success")
     @ApiResponse(responseCode = "400", description = "mail_or_id not exist or password error")
     @PostMapping(value = "loginWithPassword")

@@ -67,7 +67,7 @@ public class MovieServiceImpl implements IMovieService {
         this.resourceLoader = resourceLoader;
 
 
-        String modelPath = "C:\\Users\\19237\\Desktop\\MovieHub_sever\\src\\main\\resources\\userTower.onnx";
+        String modelPath = "C:\\Users\\19237\\Desktop\\userTower.onnx";
 
 
         OrtSession.SessionOptions sessionOptions = new OrtSession.SessionOptions();
@@ -84,39 +84,43 @@ public class MovieServiceImpl implements IMovieService {
     public BaseResponse getMovieForYou(int page, String email) throws CsvValidationException, IOException, OrtException {
         final String key = "UserFeatureOf" + email;
         ValueOperations<String, Object> this_gays_email_to_his_feature = redisTemplate.opsForValue();
-        UserFeature userFeature = (UserFeature) this_gays_email_to_his_feature.get(key);//这边可能考虑用leveldb
-        if (userFeature == null){
+        //这边可能考虑用leveldb
+        float[] userinput = (float[]) this_gays_email_to_his_feature.get(key);
+
+        if (userinput == null){
             //这边是如果用的redis，缓存里没有，就去mysql找然后存入缓存，记得改拦截器
-            userFeature = userFeatureRepository.findUserFeatureByMailOrId(email);
-            this_gays_email_to_his_feature.set(key, userFeature, 30, TimeUnit.MINUTES);
+            UserFeature userFeature = userFeatureRepository.findUserFeatureByMailOrId(email);
+            userinput = new float[24];
+            userinput[0] = userFeature.getRatingMean();
+            userinput[1] = userFeature.getRatingCount().floatValue();
+            userinput[2] = userFeature.getTimestampMax().floatValue();
+            userinput[3] = userFeature.getRuntimeMean();
+            userinput[4] = userFeature.getGenre18().floatValue();
+            userinput[5] = userFeature.getGenre80().floatValue();
+            userinput[6] = userFeature.getGenre35().floatValue();
+            userinput[7] = userFeature.getGenre28().floatValue();
+            userinput[8] = userFeature.getGenre53().floatValue();
+            userinput[9] = userFeature.getGenre12().floatValue();
+            userinput[10] = userFeature.getGenre878().floatValue();
+            userinput[11] = userFeature.getGenre16().floatValue();
+            userinput[12] = userFeature.getGenre10751().floatValue();
+            userinput[13] = userFeature.getGenre10749().floatValue();
+            userinput[14] = userFeature.getGenre9648().floatValue();
+            userinput[15] = userFeature.getGenre10402().floatValue();
+            userinput[16] = userFeature.getGenre27().floatValue();
+            userinput[17] = userFeature.getGenre14().floatValue();
+            userinput[18] = userFeature.getGenre99().floatValue();
+            userinput[19] = userFeature.getGenre10752().floatValue();
+            userinput[20] = userFeature.getGenre37().floatValue();
+            userinput[21] = userFeature.getGenre36().floatValue();
+            userinput[22] = userFeature.getGenre10769().floatValue();
+            userinput[23] = userFeature.getGenre10770().floatValue();
+            this_gays_email_to_his_feature.set(key, userinput, 30, TimeUnit.MINUTES);
         }
         float[][] movieEmbeddingDict = dictLoader.getMovieEmbeddingDict();
         Long[] tmdbIdList = dictLoader.getTmdbId();
-        float[] userinput = new float[24];
-        userinput[0] = userFeature.getRatingMean();
-        userinput[1] = userFeature.getRatingCount().floatValue();
-        userinput[2] = userFeature.getTimestampMax().floatValue();
-        userinput[3] = userFeature.getRuntimeMean();
-        userinput[4] = userFeature.getGenre18().floatValue();
-        userinput[5] = userFeature.getGenre80().floatValue();
-        userinput[6] = userFeature.getGenre35().floatValue();
-        userinput[7] = userFeature.getGenre28().floatValue();
-        userinput[8] = userFeature.getGenre53().floatValue();
-        userinput[9] = userFeature.getGenre12().floatValue();
-        userinput[10] = userFeature.getGenre878().floatValue();
-        userinput[11] = userFeature.getGenre16().floatValue();
-        userinput[12] = userFeature.getGenre10751().floatValue();
-        userinput[13] = userFeature.getGenre10749().floatValue();
-        userinput[14] = userFeature.getGenre9648().floatValue();
-        userinput[15] = userFeature.getGenre10402().floatValue();
-        userinput[16] = userFeature.getGenre27().floatValue();
-        userinput[17] = userFeature.getGenre14().floatValue();
-        userinput[18] = userFeature.getGenre99().floatValue();
-        userinput[19] = userFeature.getGenre10752().floatValue();
-        userinput[20] = userFeature.getGenre37().floatValue();
-        userinput[21] = userFeature.getGenre36().floatValue();
-        userinput[22] = userFeature.getGenre10769().floatValue();
-        userinput[23] = userFeature.getGenre10770().floatValue();
+
+
 
 
         //转为2d

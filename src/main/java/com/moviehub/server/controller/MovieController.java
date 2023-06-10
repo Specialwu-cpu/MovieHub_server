@@ -64,9 +64,11 @@ public class MovieController {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
+            System.out.println("********************************************************************************************");
             return iMovieService.getMovieForYou(page, email);
         }
         else {
+            System.out.println("你妈没了");
             return iMovieService.getMovieForVisitor(page);
         }
     }

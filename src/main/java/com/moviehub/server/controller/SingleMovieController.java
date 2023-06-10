@@ -19,10 +19,24 @@ public class SingleMovieController {
     @Resource
     private ISingleMovieService singleMovieService;
 
+    @PostMapping("/comment")
+    public BaseResponse commentSingleMovie(HttpServletRequest request, @RequestBody Map<String, String> map) {
+        Long tmdb_id = Long.parseLong(map.get("tmdb_id"));
+        String comment = map.get("comment");
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn) {
+            return singleMovieService.commentSingleMovie(email, tmdb_id, comment);
+        }
+        else {
+            return BaseResponse.error("No Login!");
+        }
+    }
+
     @PostMapping("/rate")
-    public BaseResponse rateSingleMovie(HttpServletRequest request, @RequestBody Map<String, Object> map) {
-        Long tmdb_id = ((Integer) map.get("tmdb_id")).longValue();
-        float rate = ((Double) map.get("rate")).floatValue();
+    public BaseResponse rateSingleMovie(HttpServletRequest request, @RequestBody Map<String, String> map) {
+        Long tmdb_id = Long.parseLong(map.get("tmdb_id"));
+        float rate = Float.parseFloat(map.get("rate"));
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn) {
@@ -41,6 +55,6 @@ public class SingleMovieController {
 
     @GetMapping("/IJustBeUsedToTest")
     public BaseResponse forTest() throws CsvValidationException, IOException {
-        return singleMovieService.rateSingleMovie("1923739674@qq.com", 137L, 3);
+        return singleMovieService.commentSingleMovie("1923739674@qq.com", 137L, "这电影真他妈好看！");
     }
 }
