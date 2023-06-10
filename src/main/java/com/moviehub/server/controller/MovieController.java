@@ -7,6 +7,7 @@ package com.moviehub.server.controller;
  * @Author ：wsh
  * @Date ：2023/4/25 11:29
  **/
+import ai.onnxruntime.OrtException;
 import com.moviehub.server.entity.Movie;
 import com.moviehub.server.service.IMovieService;
 import com.moviehub.server.util.BaseResponse;
@@ -59,7 +60,7 @@ public class MovieController {
             parameters = {@Parameter(name = "page", description = "the page you need")})
     @ApiResponse(responseCode = "200", description = "success!")
     @GetMapping(value = "/choice")
-    public BaseResponse getMovieForVisitor(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "0") int page) throws CsvValidationException, IOException {
+    public BaseResponse getMovieForVisitor(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "0") int page) throws CsvValidationException, IOException, OrtException {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
@@ -70,7 +71,7 @@ public class MovieController {
         }
     }
     @GetMapping("/IJustBeUsedToTest")
-    public BaseResponse forTest() throws CsvValidationException, IOException {
+    public BaseResponse forTest() throws CsvValidationException, IOException, OrtException {
         return iMovieService.getMovieForYou(0, "20301138@bjtu.edu.cn");
     }
 

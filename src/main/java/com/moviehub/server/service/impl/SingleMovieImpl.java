@@ -5,11 +5,14 @@ import com.moviehub.server.repository.*;
 import com.moviehub.server.service.ISingleMovieService;
 import com.moviehub.server.util.BaseResponse;
 import jakarta.annotation.Resource;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class SingleMovieImpl implements ISingleMovieService {
@@ -18,6 +21,9 @@ public class SingleMovieImpl implements ISingleMovieService {
 
     @Resource
     private GenreRepository genreRepository;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Resource
     private CountriesRepository countriesRepository;
@@ -94,6 +100,12 @@ public class SingleMovieImpl implements ISingleMovieService {
             int genreId = thisMovieGenres.get(i).getId();
             userFeatureRepository.updateGenreN(genreId, email);
         }
+
+
+        //用户特征存入缓存，更新推荐用的东西
+        UserFeature thisUsersFeature = userFeatureRepository.findUserFeatureByMailOrId(email);
+        ValueOperations<String, Object> setUserFeature = redisTemplate.opsForValue();
+        setUserFeature.set("UserFeatureOf" + email, thisUsersFeature, 30, TimeUnit.MINUTES);
         return BaseResponse.success("Rating successfully!");
 
     }

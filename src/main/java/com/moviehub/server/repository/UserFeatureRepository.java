@@ -13,4 +13,8 @@ public interface UserFeatureRepository extends JpaRepository<UserFeature, String
     @Modifying
     @Query(value = "update user_feature set genre_?1 = genre_?1 + 1 where mail_or_id = ?2", nativeQuery = true)
     int updateGenreN(int genreId, String email);
+
+
+    @Query(value = "select * from user_feature where mail_or_id = ?1", nativeQuery = true)
+    UserFeature findUserFeatureByMailOrId(String mailOrId);
 }

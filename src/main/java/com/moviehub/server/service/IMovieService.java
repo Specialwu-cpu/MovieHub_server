@@ -1,5 +1,6 @@
 package com.moviehub.server.service;
 
+import ai.onnxruntime.OrtException;
 import com.moviehub.server.entity.Movie;
 import com.moviehub.server.util.BaseResponse;
 import com.opencsv.exceptions.CsvValidationException;
@@ -17,7 +18,7 @@ import java.util.Map;
  **/
 public interface IMovieService {
     List<Movie> getAllMovies();
-    BaseResponse getMovieForYou(int page, String email) throws CsvValidationException, IOException;
+    BaseResponse getMovieForYou(int page, String email) throws CsvValidationException, IOException, OrtException;
 
     BaseResponse getMovieForVisitor(int page);
 }

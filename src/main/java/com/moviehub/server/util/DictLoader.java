@@ -22,6 +22,20 @@ public class DictLoader {
     }
 
 
+    public Long[] getTmdbId() throws CsvValidationException, IOException {
+        Resource resource = resourceLoader.getResource("classpath:embeddingDict.csv");
+        Reader reader = new InputStreamReader(resource.getInputStream());
+        CSVReader csvReader = new CSVReader(reader);
+        csvReader.readNext();
+        String[] line;
+        Long[] tmdbIdList = new Long[45100];
+        int nn = 0;
+        while ((line = csvReader.readNext()) != null) {
+            tmdbIdList[nn] = Long.parseLong(line[2]);
+            nn ++;
+        }
+        return tmdbIdList;
+    }
     public float[][] getMovieEmbeddingDict() throws IOException, CsvValidationException {
         Resource resource = resourceLoader.getResource("classpath:embeddingDict.csv");
         Reader reader = new InputStreamReader(resource.getInputStream());
@@ -30,9 +44,9 @@ public class DictLoader {
         String[] line;
         List<float[]> data = new ArrayList<>();
         while ((line = csvReader.readNext()) != null) {
-            float[] thisLine = new float[line.length - 2];
-            for (int i = 2; i < line.length; i++){
-                thisLine[i - 2] = Float.parseFloat(line[i]);
+            float[] thisLine = new float[line.length - 3];
+            for (int i = 3; i < line.length; i++){
+                thisLine[i - 3] = Float.parseFloat(line[i]);
             }
             data.add(thisLine);
         }

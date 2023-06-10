@@ -1,6 +1,8 @@
 package com.moviehub.server.service.impl;
 
 import com.moviehub.server.entity.User;
+import com.moviehub.server.entity.UserFeature;
+import com.moviehub.server.repository.UserFeatureRepository;
 import com.moviehub.server.repository.UserRepository;
 import com.moviehub.server.service.IUserService;
 import com.moviehub.server.service.IVerifyCodeService;
@@ -36,6 +38,9 @@ public class UserServiceImpl implements IUserService {
     private UserRepository userRepository;
 
     @Resource
+    private UserFeatureRepository userFeatureRepository;
+
+    @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
     @Resource
@@ -65,11 +70,15 @@ public class UserServiceImpl implements IUserService {
                 String now = TimeManager.getNowDateTime().toString();
                 String message = now + "," + mail_or_id;
                 String token = AESEncryptor.cipher(message);
-                System.out.println(message);
-                System.out.println(token);
                 HashMap<String, String> data = new HashMap<>();
                 data.put("token", token);
+
                 nonceOfUser.set(mail_or_id + "token", token, 30, TimeUnit.MINUTES);
+
+
+                //这人登录了，把他的feature存入缓存
+                UserFeature thisUserFeature = userFeatureRepository.findUserFeatureByMailOrId(mail_or_id);
+                nonceOfUser.set("UserFeatureOf" + mail_or_id, thisUserFeature, 30, TimeUnit.MINUTES);
                 return BaseResponse.success(data);
             }
             else {
