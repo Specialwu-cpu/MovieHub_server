@@ -18,5 +18,7 @@ public class InterpreterConfig implements WebMvcConfigurer {
         //这种方式会拦截指定的请求
         registry.addInterceptor(authorizationInterceptor).addPathPatterns("/choice");
         registry.addInterceptor(authorizationInterceptor).addPathPatterns("/singleMovie/rate");
+        registry.addInterceptor(authorizationInterceptor).addPathPatterns("/user/");
+
     }
 }

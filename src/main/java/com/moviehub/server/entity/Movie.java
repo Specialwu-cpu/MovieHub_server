@@ -7,7 +7,9 @@ package com.moviehub.server.entity;
  * @Author ：wsh
  * @Date ：2023/4/25 10:21
  **/
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import jakarta.persistence.*;
@@ -20,6 +22,8 @@ import java.util.List;
 @Table(name = "movie")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Movie implements Serializable {
     private static final long serialVersionUID = 1L;
 

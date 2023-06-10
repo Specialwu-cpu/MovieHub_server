@@ -20,7 +20,7 @@ import java.util.List;
  * @Date ：2023/4/27 18:12
  **/
 @RestController
-@RequestMapping("/credit")
+@RequestMapping("/credits")
 @Tag(name = "CastController", description = "CastController")
 @CrossOrigin(origins = "*")
 public class CastController {

@@ -21,4 +21,8 @@ public interface IMovieService {
     BaseResponse getMovieForYou(int page, String email) throws CsvValidationException, IOException, OrtException;
 
     BaseResponse getMovieForVisitor(int page);
+
+    BaseResponse searchMoviews(String query);
+
+//    BaseResponse searchMovieSuggest(String query);
 }

@@ -70,6 +70,17 @@ public class MovieController {
             return iMovieService.getMovieForVisitor(page);
         }
     }
+
+    @GetMapping("/search")
+    public BaseResponse searchMovies(@RequestParam("query") String query) {
+        return iMovieService.searchMoviews(query);
+    }
+
+//    @GetMapping("/searchSuggest")
+//    public BaseResponse searchSuggestMovies(@RequestParam("query") String query) {
+//        return iMovieService.searchMovieSuggest(query);
+//    }
+
     @GetMapping("/IJustBeUsedToTest")
     public BaseResponse forTest() throws CsvValidationException, IOException, OrtException {
         return iMovieService.getMovieForYou(0, "20301138@bjtu.edu.cn");

@@ -2,6 +2,7 @@ package com.moviehub.server.repository;
 
 import com.moviehub.server.entity.Crew;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -14,4 +15,8 @@ import java.util.List;
  **/
 public interface CrewRepository extends JpaRepository<Crew, String> {
     List<Crew> findByTmdbId(Long tmdbId);
+
+    @Query(value = "select * from crew where credit_id = ?1", nativeQuery = true)
+    Crew findByCreditId(String creditId);
+
 }

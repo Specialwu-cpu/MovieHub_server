@@ -2,8 +2,6 @@ package com.moviehub.server.service;
 
 import com.moviehub.server.entity.User;
 import com.moviehub.server.util.BaseResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -11,7 +9,6 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Project ：server
@@ -39,4 +36,20 @@ public interface IUserService {
     boolean invalidUserName(String userName);
 
     BaseResponse getUserInfo(String mailOrId);
+
+    BaseResponse getUserHistory(String mailOrId, int page);
+
+    BaseResponse addUserHistory(String mailOrId, Long tmdbId);
+
+    BaseResponse deleteUserHistory(String mailOrId, Long historyId);
+
+    BaseResponse getUserCollection(String mailOrId, int page);
+
+    BaseResponse addUserCollection(String mailOrId, Long tmdbId);
+
+    BaseResponse deleteUserCollection(String mailOrId, Long collectionId);
+
+    BaseResponse resetPassword(String mailOrId, String oldPasswordOne, String oldPasswordTwo, String newPassword);
+
+    BaseResponse forgetPassword(String mailOrId, String newPasswordOne, String newPasswordTwo, String verifyCode);
 }

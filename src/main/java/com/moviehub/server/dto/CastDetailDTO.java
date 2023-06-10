@@ -1,6 +1,7 @@
 package com.moviehub.server.dto;
 
 import com.moviehub.server.entity.Cast;
+import com.moviehub.server.entity.Crew;
 import com.moviehub.server.entity.Movie;
 
 import java.util.List;
@@ -14,11 +15,33 @@ import java.util.List;
  **/
 public class CastDetailDTO {
     private Cast cast;
-    private List<Movie> movies;
+    private List<Movie> moviesByCast;
 
-    public CastDetailDTO(Cast cast, List<Movie> movies) {
+    private Crew crew;
+
+    public List<Movie> getMoviesByCast() {
+        return moviesByCast;
+    }
+
+    public void setMoviesByCast(List<Movie> moviesByCast) {
+        this.moviesByCast = moviesByCast;
+    }
+
+    public List<Movie> getMoviesByCrew() {
+        return moviesByCrew;
+    }
+
+    public void setMoviesByCrew(List<Movie> moviesByCrew) {
+        this.moviesByCrew = moviesByCrew;
+    }
+
+    private List<Movie> moviesByCrew;
+
+    public CastDetailDTO(Cast cast, List<Movie> moviesByCast, Crew crew, List<Movie> moviesByCrew) {
         this.cast = cast;
-        this.movies = movies;
+        this.moviesByCast = moviesByCast;
+        this.crew = crew;
+        this.moviesByCrew = moviesByCrew;
     }
 
     public Cast getCast() {
@@ -29,12 +52,12 @@ public class CastDetailDTO {
         this.cast = cast;
     }
 
-    public List<Movie> getMovies() {
-        return movies;
+    public Crew getCrew() {
+        return crew;
     }
 
-    public void setMovies(List<Movie> movies) {
-        this.movies = movies;
+    public void setCrew(Crew crew) {
+        this.crew = crew;
     }
 }
 

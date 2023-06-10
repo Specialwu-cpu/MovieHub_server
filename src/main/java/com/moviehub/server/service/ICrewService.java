@@ -1,7 +1,5 @@
 package com.moviehub.server.service;
 
-import com.moviehub.server.util.BaseResponse;
-
 /**
  * @Project ：server
  * @File ：ICrewService.java
