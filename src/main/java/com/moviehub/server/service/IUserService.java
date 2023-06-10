@@ -49,7 +49,7 @@ public interface IUserService {
 
     BaseResponse forgetPassword(String mailOrId, String newPasswordOne, String newPasswordTwo, String verifyCode);
 
-    BaseResponse updateUser(String mailOrId, String userName, String styleText);
+    BaseResponse updateUser(String mailOrId, String userName, String styleText, MultipartFile file);
 
     BaseResponse updateAvatar(String mailOrId, MultipartFile file);
 }

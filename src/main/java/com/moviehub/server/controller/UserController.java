@@ -39,11 +39,11 @@ public class UserController {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return BaseResponse.error("nimasile");
+            return iUserService.getUserInfo(email);
         }
         else {
             System.out.println("我喜欢我");
-            return iUserService.getUserInfo(email);
+            return BaseResponse.error("请登录");
         }
 //        return iUserService.getUserInfo(map.get("mail_or_id"));
     }
@@ -51,11 +51,13 @@ public class UserController {
     @PutMapping("/change/info")
     public BaseResponse updateUser(
             HttpServletRequest request,
-            @RequestBody Map<String, String> map) {
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("user_name") String user_name,
+            @RequestParam("style_text") String style_text) {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return iUserService.getUserInfo(email);
+            return iUserService.updateUser(email, user_name, style_text, file);
         }
         else {
             System.out.println("我喜欢我");
