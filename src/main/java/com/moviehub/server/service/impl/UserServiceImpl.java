@@ -330,30 +330,16 @@ public class UserServiceImpl implements IUserService {
     @Override
     public BaseResponse getUserHistory(String mailOrId, int page) {
         final String key = "user:history_start" + page;
-        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-
+        HashMap<String, List<Movie>> data = new HashMap<>();
         if (page == 0){
-            HashMap<String, List<Movie>> data = (HashMap<String, List<Movie>>) valueOperations.get(key);
-
-            if (data == null){
-                List<Movie> movieHistory = movieRepository.findMoviesByHistoryId(mailOrId, 20, 20 * page);
-
-                data = new HashMap<>();
-                data.put("movie history", movieHistory);
-                valueOperations.set(key, data, 1, TimeUnit.HOURS);
-            }
+            List<Movie> movieHistory = movieRepository.findMoviesByHistoryId(mailOrId, 20, 20 * page);
+            data.put("movieHistory", movieHistory);
             //都给客户端
             return BaseResponse.success(data);
         }
         else {
-            List<UserHistory> data = (List<UserHistory>) valueOperations.get(key);
-            if (data == null) {
-                List<Movie> newData = movieRepository.findMoviesByHistoryId(mailOrId, 20, 20 * page);
-                valueOperations.set(key, newData, 60 - page, TimeUnit.MINUTES);
-
-                return BaseResponse.success(newData);
-            }
-            return BaseResponse.success(data);
+            List<Movie> newData = movieRepository.findMoviesByHistoryId(mailOrId, 20, 20 * page);
+            return BaseResponse.success(newData);
         }
     }
 
@@ -374,30 +360,16 @@ public class UserServiceImpl implements IUserService {
     @Override
     public BaseResponse getUserCollection(String mailOrId, int page) {
         final String key = "user:collection_start" + page;
-        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-
+        HashMap<String, List<Movie>> data = new HashMap<>();
         if (page == 0){
-            HashMap<String, List<Movie>> data = (HashMap<String, List<Movie>>) valueOperations.get(key);
-
-            if (data == null){
                 List<Movie> movieCollection = movieRepository.findMoviesByCollectionId(mailOrId, 20, 20 * page);
-
-                data = new HashMap<>();
-                data.put("movie collection", movieCollection);
-                valueOperations.set(key, data, 1, TimeUnit.HOURS);
-            }
+                data.put("movieCollection", movieCollection);
             //都给客户端
             return BaseResponse.success(data);
         }
         else {
-            List<UserHistory> data = (List<UserHistory>) valueOperations.get(key);
-            if (data == null) {
-                List<Movie> newData = movieRepository.findMoviesByCollectionId(mailOrId, 20, 20 * page);
-                valueOperations.set(key, newData, 60 - page, TimeUnit.MINUTES);
-
-                return BaseResponse.success(newData);
-            }
-            return BaseResponse.success(data);
+            List<Movie> newData = movieRepository.findMoviesByCollectionId(mailOrId, 20, 20 * page);
+            return BaseResponse.success(newData);
         }
     }
 
