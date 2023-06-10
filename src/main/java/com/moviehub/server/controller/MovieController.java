@@ -104,49 +104,50 @@ public class MovieController {
             })
     @PostMapping("/addmovies")
     public BaseResponse addMovie(
+            HttpServletRequest request,
             @RequestBody Map<String, String> map) {
-//        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
-//        String email = (String) request.getAttribute("email");
-//        if (isLoggedIn){
-//            return BaseResponse.error("nimasile");
-//        }
-//        else {
-//            System.out.println("我喜欢我");
-//            return iMovieService.addMovie(
-//                    Boolean.parseBoolean(map.get("adult")),
-//                    map.get("homepage"),
-//                    map.get("original_language"),
-//                    map.get("original_title"),
-//                    map.get("overview"),
-//                    Double.parseDouble(map.get("popularity")),
-//                    map.get("poster_path"),
-//                    map.get("status"),
-//                    map.get("tagline"),
-//                    map.get("title"),
-//                    Long.parseLong(map.get("revenue")),
-//                    Long.parseLong(map.get("budget")),
-//                    LocalDate.parse(map.get("release_date")),
-//                    Integer.parseInt(map.get("runtime")),
-//                    Float.parseFloat(map.get("vote_average")),
-//                    Integer.parseInt(map.get("vote_count")));
-//        }
-        return iMovieService.addMovie(
-                Boolean.parseBoolean(map.get("adult")),
-                map.get("homepage"),
-                map.get("original_language"),
-                map.get("original_title"),
-                map.get("overview"),
-                Double.parseDouble(map.get("popularity")),
-                map.get("poster_path"),
-                map.get("status"),
-                map.get("tagline"),
-                map.get("title"),
-                Long.parseLong(map.get("revenue")),
-                Long.parseLong(map.get("budget")),
-                LocalDate.parse(map.get("release_date")),
-                Integer.parseInt(map.get("runtime")),
-                Float.parseFloat(map.get("vote_average")),
-                Integer.parseInt(map.get("vote_count")));
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return BaseResponse.error("nimasile");
+        }
+        else {
+            System.out.println("我喜欢我");
+            return iMovieService.addMovie(
+                    Boolean.parseBoolean(map.get("adult")),
+                    map.get("homepage"),
+                    map.get("original_language"),
+                    map.get("original_title"),
+                    map.get("overview"),
+                    Double.parseDouble(map.get("popularity")),
+                    map.get("poster_path"),
+                    map.get("status"),
+                    map.get("tagline"),
+                    map.get("title"),
+                    Long.parseLong(map.get("revenue")),
+                    Long.parseLong(map.get("budget")),
+                    LocalDate.parse(map.get("release_date")),
+                    Integer.parseInt(map.get("runtime")),
+                    Float.parseFloat(map.get("vote_average")),
+                    Integer.parseInt(map.get("vote_count")));
+        }
+//        return iMovieService.addMovie(
+//                Boolean.parseBoolean(map.get("adult")),
+//                map.get("homepage"),
+//                map.get("original_language"),
+//                map.get("original_title"),
+//                map.get("overview"),
+//                Double.parseDouble(map.get("popularity")),
+//                map.get("poster_path"),
+//                map.get("status"),
+//                map.get("tagline"),
+//                map.get("title"),
+//                Long.parseLong(map.get("revenue")),
+//                Long.parseLong(map.get("budget")),
+//                LocalDate.parse(map.get("release_date")),
+//                Integer.parseInt(map.get("runtime")),
+//                Float.parseFloat(map.get("vote_average")),
+//                Integer.parseInt(map.get("vote_count")));
 //        return null;
     }
 
@@ -172,27 +173,36 @@ public class MovieController {
                                     schema = @Schema(implementation = BaseResponse.class)))
             })
     public BaseResponse updateMovie(
+            HttpServletRequest request,
             @Parameter(description = "The ID of the movie to update", required = true)
             @PathVariable("tmdb_id") Long tmdbId,
             @RequestBody Map<String, String> map) {
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return iMovieService.updateMovie(tmdbId,
+                    Boolean.parseBoolean(map.get("adult")),
+                    map.get("homepage"),
+                    map.get("original_language"),
+                    map.get("original_title"),
+                    map.get("overview"),
+                    Double.parseDouble(map.get("popularity")),
+                    map.get("poster_path"),
+                    map.get("status"),
+                    map.get("tagline"),
+                    map.get("title"),
+                    Long.parseLong(map.get("revenue")),
+                    Long.parseLong(map.get("budget")),
+                    LocalDate.parse(map.get("release_date")),
+                    Integer.parseInt(map.get("runtime")),
+                    Float.parseFloat(map.get("vote_average")),
+                    Integer.parseInt(map.get("vote_count")));
+        }
+        else {
+            System.out.println("我喜欢我");
+            return BaseResponse.error("去登录");
+        }
 //        return null;
-        return iMovieService.updateMovie(tmdbId,
-                Boolean.parseBoolean(map.get("adult")),
-                map.get("homepage"),
-                map.get("original_language"),
-                map.get("original_title"),
-                map.get("overview"),
-                Double.parseDouble(map.get("popularity")),
-                map.get("poster_path"),
-                map.get("status"),
-                map.get("tagline"),
-                map.get("title"),
-                Long.parseLong(map.get("revenue")),
-                Long.parseLong(map.get("budget")),
-                LocalDate.parse(map.get("release_date")),
-                Integer.parseInt(map.get("runtime")),
-                Float.parseFloat(map.get("vote_average")),
-                Integer.parseInt(map.get("vote_count")));
     }
 
     //这个该删。首先没用，其次会影响其他的
@@ -208,10 +218,19 @@ public class MovieController {
     @Operation(summary = "Delete a movie by tmdb_id")
     @DeleteMapping("/{tmdb_id}/delete")
     public BaseResponse deleteMovieByTmdbId(
+            HttpServletRequest request,
             @Parameter(in = ParameterIn.PATH, description = "The tmdb_id of the movie to delete", required = true)
             @PathVariable("tmdb_id") Long tmdbId) {
 //        return null;
-        return iMovieService.deleteMovieByTmdbId(tmdbId);
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return iMovieService.deleteMovieByTmdbId(tmdbId);
+        }
+        else {
+            System.out.println("我喜欢我");
+            return BaseResponse.error("去登录");
+        }
     }
 
 }

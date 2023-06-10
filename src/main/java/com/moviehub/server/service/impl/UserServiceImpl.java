@@ -17,7 +17,9 @@ import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -158,6 +160,40 @@ public class UserServiceImpl implements IUserService {
         }
         return BaseResponse.success(newUser);
         //业务逻辑：mail存在了怎么办，password不符合要求怎么办，user_name不符合需求怎么办
+    }
+
+    @Override
+    public BaseResponse updateUser(String mailOrId, String userName, String styleText) {
+        User user = userRepository.findByMailOrId(mailOrId);
+        if (user == null) {
+            return BaseResponse.error("User not found");
+        }
+        user.setUser_name(userName);
+        user.setStyle_text(styleText);
+        userRepository.save(user);
+        return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse updateAvatar(String mailOrId, MultipartFile file) {
+        User user = userRepository.findByMailOrId(mailOrId);
+        if (user == null) {
+            return BaseResponse.error("User not found");
+        }
+
+        // 处理上传的头像文件
+        try {
+            byte[] avatarBytes = file.getBytes();
+            user.setGraph(avatarBytes);
+            // 可以根据需要对头像进行进一步处理，例如压缩、裁剪等
+
+            // 保存更新后的用户信息
+            userRepository.save(user);
+            return BaseResponse.success();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return BaseResponse.error("Failed to update avatar");
+        }
     }
 
     private User save(String mailOrId, String newPassword) {
