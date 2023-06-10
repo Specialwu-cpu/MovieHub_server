@@ -7,8 +7,7 @@ import com.moviehub.server.util.BaseResponse;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class SingleMovieImpl implements ISingleMovieService {
@@ -54,6 +53,17 @@ public class SingleMovieImpl implements ISingleMovieService {
 
         List<Crew> crews = crewRepository.findByTmdbId(tmdb_id);
 
+        Set<Movie> uniqueMovies = new HashSet<>();
+
+        for (Keyword keyword : keywords) {
+            Integer keywordId = keyword.getKeywordID();
+            List<Movie> movies = movieRepository.findMoviesByKeywordId(keywordId);
+            uniqueMovies.addAll(movies);
+        }
+
+        List<Movie> combinedMovies = new ArrayList<>(uniqueMovies);
+
+//        List<Movie> otherMoviesByGenres = movieRepository.findMoviesByGenre();
 
 
         HashMap<String, Object> data = new HashMap<>();
@@ -65,10 +75,8 @@ public class SingleMovieImpl implements ISingleMovieService {
         data.put("keywords", keywords);
         data.put("casts", casts);
         data.put("crews", crews);
+        data.put("otherMovies", combinedMovies);
 
         return BaseResponse.success(data);
-
-
-
     }
 }

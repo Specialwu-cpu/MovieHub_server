@@ -23,6 +23,20 @@ public class Genre {
     @Column(name = "genre_name", length = 255)
     private String name;
 
-    // 构造函数、Getter和Setter方法略去
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
 

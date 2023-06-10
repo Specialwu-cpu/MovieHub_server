@@ -4,6 +4,8 @@ import ai.onnxruntime.OrtEnvironment;
 import ai.onnxruntime.OrtException;
 import ai.onnxruntime.OrtSession;
 import com.moviehub.server.entity.Movie;
+//import com.moviehub.server.entity.MovieDocument;
+//import com.moviehub.server.repository.MovieDocumentRepository;
 import com.moviehub.server.repository.MovieRepository;
 import com.moviehub.server.service.IMovieService;
 import com.moviehub.server.util.BaseResponse;
@@ -15,8 +17,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,6 +37,9 @@ public class MovieServiceImpl implements IMovieService {
 
     @Resource
     private MovieRepository movieRepository;
+
+//    @Resource
+//    private MovieDocumentRepository movieDocumentRepository;
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
@@ -96,5 +100,44 @@ public class MovieServiceImpl implements IMovieService {
         }
 
     }
+
+    // todo 可加redis，还未加
+    @Override
+    public BaseResponse searchMoviews(String query) {
+        List<Movie> moviesByTitle = movieRepository.findByTitleContainingIgnoreCase(query);
+        List<Movie> moviesByKeyword = movieRepository.findByKeywordsContainingIgnoreCase(query);
+        List<Movie> moviesByCrew = movieRepository.findByCrewContainingIgnoreCase(query);
+        List<Movie> moviesByCast = movieRepository.findByCastContainingIgnoreCase(query);
+
+        // 合并搜索结果
+        List<Movie> mergedMovies = new ArrayList<>();
+        mergedMovies.addAll(moviesByTitle);
+        mergedMovies.addAll(moviesByKeyword);
+        mergedMovies.addAll(moviesByCrew);
+        mergedMovies.addAll(moviesByCast);
+
+        // 去重，根据电影的唯一标识（如ID）进行去重
+        Set<Long> uniqueMovieIds = new HashSet<>();
+        List<Movie> deduplicatedMovies = new ArrayList<>();
+        for (Movie movie : mergedMovies) {
+            if (uniqueMovieIds.add(movie.getTmdbId())) {
+                deduplicatedMovies.add(movie);
+            }
+        }
+
+        return BaseResponse.success(deduplicatedMovies);
+
+    }
+
+//    @Override
+//    public BaseResponse searchMovieSuggest(String query) {
+//        // 自动补全查询
+//        List<MovieDocument> suggestions = movieDocumentRepository.findByTitleSuggest(query);
+//
+//        // 其他业务逻辑
+//
+//        return BaseResponse.success(suggestions);
+//    }
+
 
 }
