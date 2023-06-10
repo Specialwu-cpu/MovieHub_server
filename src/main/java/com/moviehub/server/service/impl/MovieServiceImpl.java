@@ -24,6 +24,8 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -235,6 +237,66 @@ public class MovieServiceImpl implements IMovieService {
 
         return BaseResponse.success(deduplicatedMovies);
 
+    }
+
+    @Override
+    public BaseResponse addMovie(boolean adult, String homepage, String originalLanguage, String originalTitle, String overview, Double popularity, String posterPath, String status, String tagline, String title, Long revenue, Long budget, LocalDate releaseDate, Integer runtime, Float voteAverage, Integer voteCount) {
+        List<Long> existingTmdbIds = movieRepository.findAllTmdbIds();
+        Long newTmdbId;
+        Random random = new Random();
+        do {
+            newTmdbId = (long) (random.nextInt(Integer.MAX_VALUE) + 1);
+        } while (existingTmdbIds.contains(newTmdbId));
+        Movie movie = new Movie();
+        movie.setTmdbId(newTmdbId);
+        movie.setAdult(adult);
+        movie.setHomepage(homepage);
+        movie.setOriginalLanguage(originalLanguage);
+        movie.setOriginalTitle(originalTitle);
+        movie.setOverview(overview);
+        movie.setPopularity(popularity);
+        movie.setPosterPath(posterPath);
+        movie.setStatus(status);
+        movie.setTagline(tagline);
+        movie.setTitle(title);
+        movie.setRevenue(revenue);
+        movie.setBudget(budget);
+        movie.setReleaseDate(releaseDate);
+        movie.setRuntime(runtime);
+        movie.setVoteAverage(voteAverage);
+        movie.setVoteCount(voteCount);
+        movieRepository.save(movie);
+        return BaseResponse.success(newTmdbId);
+    }
+
+    @Override
+    public BaseResponse updateMovie(Long tmdbId, boolean adult, String homepage, String originalLanguage, String originalTitle, String overview, double popularity, String posterPath, String status, String tagline, String title, long revenue, long budget, LocalDate releaseDate, int runtime, float voteAverage, int voteCount) {
+        Movie movie = new Movie();
+        movie.setTmdbId(tmdbId);
+        movie.setAdult(adult);
+        movie.setHomepage(homepage);
+        movie.setOriginalLanguage(originalLanguage);
+        movie.setOriginalTitle(originalTitle);
+        movie.setOverview(overview);
+        movie.setPopularity(popularity);
+        movie.setPosterPath(posterPath);
+        movie.setStatus(status);
+        movie.setTagline(tagline);
+        movie.setTitle(title);
+        movie.setRevenue(revenue);
+        movie.setBudget(budget);
+        movie.setReleaseDate(releaseDate);
+        movie.setRuntime(runtime);
+        movie.setVoteAverage(voteAverage);
+        movie.setVoteCount(voteCount);
+        movieRepository.save(movie);
+        return BaseResponse.success();
+    }
+
+    @Override
+    public BaseResponse deleteMovieByTmdbId(Long tmdbId) {
+        movieRepository.deleteById(String.valueOf(tmdbId));
+        return BaseResponse.success();
     }
 
 //    @Override

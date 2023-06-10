@@ -67,4 +67,6 @@ public interface MovieRepository extends JpaRepository<Movie, String> {
 
     @Query(value = "SELECT * FROM movie m WHERE m.tmdb_id IN (SELECT subquery.tmdb_id FROM (SELECT tmdb_id FROM keyword_and_movie WHERE keyword_id = ?1 limit 5) AS subquery )", nativeQuery = true)
     List<Movie> findMoviesByKeywordId(Integer keywordId);
+    @Query(value = "SELECT m.tmdb_id FROM movie m", nativeQuery = true)
+    List<Long> findAllTmdbIds();
 }

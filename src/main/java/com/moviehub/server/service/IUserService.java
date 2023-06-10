@@ -2,6 +2,7 @@ package com.moviehub.server.service;
 
 import com.moviehub.server.entity.User;
 import com.moviehub.server.util.BaseResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -52,4 +53,8 @@ public interface IUserService {
     BaseResponse resetPassword(String mailOrId, String oldPasswordOne, String oldPasswordTwo, String newPassword);
 
     BaseResponse forgetPassword(String mailOrId, String newPasswordOne, String newPasswordTwo, String verifyCode);
+
+    BaseResponse updateUser(String mailOrId, String userName, String styleText, MultipartFile file);
+
+    BaseResponse updateAvatar(String mailOrId, MultipartFile file);
 }

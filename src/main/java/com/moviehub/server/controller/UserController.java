@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -30,7 +31,7 @@ public class UserController {
     @Resource
     private IVerifyCodeService iVerifyCodeService;
 
-    @GetMapping("/getUserInfo")
+    @PostMapping("/info")
     @Operation(summary = "获取用户信息", description = "根据邮箱或者用户ID获取用户信息")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "获取成功"),
@@ -38,16 +39,44 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "用户不存在"),
             @ApiResponse(responseCode = "500", description = "服务器内部错误")
     })
+//    public BaseResponse getUserInfo(@RequestBody Map<String, String> map) {
     public BaseResponse getUserInfo(HttpServletRequest request) {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return BaseResponse.error("nimasile");
+            return iUserService.getUserInfo(email);
         }
         else {
             System.out.println("我喜欢我");
-            return iUserService.getUserInfo(email);
+            return BaseResponse.error("请登录");
         }
+//        return iUserService.getUserInfo(map.get("mail_or_id"));
+    }
+
+    @PutMapping("/change/info")
+    public BaseResponse updateUser(
+            HttpServletRequest request,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("user_name") String user_name,
+            @RequestParam("style_text") String style_text) {
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return iUserService.updateUser(email, user_name, style_text, file);
+        }
+        else {
+            System.out.println("我喜欢我");
+            return BaseResponse.error("请登录");
+        }
+//        return iUserService.updateUser(map.get("mail_or_id"), map.get("user_name"), map.get("style_text"));
+    }
+
+    @PutMapping("/change/avatar")
+    public BaseResponse updateAvatar(
+            HttpServletRequest request,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("mail_or_id") String mail_or_id) {
+        return iUserService.updateAvatar(mail_or_id, file);
     }
 
     /**
@@ -138,11 +167,11 @@ public class UserController {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return BaseResponse.error("nimasile");
+            return iUserService.resetPassword(email, map.get("oldPasswordOne"), map.get("oldPasswordTwo"), map.get("newPassword"));
         }
         else {
             System.out.println("我喜欢我");
-            return iUserService.resetPassword(email, map.get("oldPasswordOne"), map.get("oldPasswordTwo"), map.get("newPassword"));
+            return BaseResponse.error("快去登录");
         }
     }
 
@@ -175,11 +204,11 @@ public class UserController {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return BaseResponse.error("nimasile");
+            return iUserService.getUserHistory(email, page);
         }
         else {
             System.out.println("我喜欢我");
-            return iUserService.getUserHistory(email, page);
+            return BaseResponse.error("nimasile");
         }
     }
 
@@ -191,11 +220,11 @@ public class UserController {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return BaseResponse.error("nimasile");
+            return iUserService.addUserHistory(email, tmdbId);
         }
         else {
             System.out.println("我喜欢我");
-            return iUserService.addUserHistory(email, tmdbId);
+            return BaseResponse.error("去登录");
         }
     }
 
@@ -207,11 +236,11 @@ public class UserController {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return BaseResponse.error("nimasile");
+            return iUserService.deleteUserHistory(email, historyId);
         }
         else {
             System.out.println("我喜欢我");
-            return iUserService.deleteUserHistory(email, historyId);
+            return BaseResponse.error("去登录");
         }
     }
 
@@ -223,11 +252,11 @@ public class UserController {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return BaseResponse.error("nimasile");
+            return iUserService.getUserCollection(email, page);
         }
         else {
             System.out.println("我喜欢我");
-            return iUserService.getUserCollection(email, page);
+            return BaseResponse.error("去登录");
         }
     }
 
@@ -239,11 +268,11 @@ public class UserController {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return BaseResponse.error("nimasile");
+            return iUserService.addUserCollection(email, tmdbId);
         }
         else {
             System.out.println("我喜欢我");
-            return iUserService.addUserCollection(email, tmdbId);
+            return BaseResponse.error("去登录");
         }
     }
 
@@ -255,11 +284,11 @@ public class UserController {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return BaseResponse.error("nimasile");
+            return iUserService.deleteUserCollection(email, collectionId);
         }
         else {
             System.out.println("我喜欢我");
-            return iUserService.deleteUserCollection(email, collectionId);
+            return BaseResponse.error("去登录");
         }
     }
 }
