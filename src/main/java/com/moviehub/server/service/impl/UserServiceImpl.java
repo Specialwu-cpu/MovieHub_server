@@ -199,7 +199,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public BaseResponse forgetPassword(String mail_or_id, String newPasswordOne, String newPasswordTwo, String verifyCode) {
-        if (newPasswordOne != newPasswordTwo) {
+        if (!Objects.equals(newPasswordOne, newPasswordTwo)) {
+            System.out.println(newPasswordTwo + "!!!!!!!!!" + newPasswordOne);
             return BaseResponse.error("两次输入密码不一致");
         }
         if (emailInDatabase(mail_or_id)) {
