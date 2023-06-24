@@ -35,7 +35,7 @@ public class SingleMovieController {
 
     @PostMapping("/rate")
     public BaseResponse rateSingleMovie(HttpServletRequest request, @RequestBody Map<String, String> map) {
-        Long tmdb_id = Long.parseLong(map.get("tmdb_id"));
+        Long tmdb_id = Long.parseLong(map.get("tmdbId"));
         float rate = Float.parseFloat(map.get("rate"));
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
@@ -47,7 +47,7 @@ public class SingleMovieController {
         }
     }
 
-    @GetMapping("/searchMovie")
+    @GetMapping("/movie")
     public BaseResponse getSingleMovie(@RequestParam(value = "tmdb_id", defaultValue = "862") Long tmdb_id) {
         return singleMovieService.getSingleMovie(tmdb_id);
     }

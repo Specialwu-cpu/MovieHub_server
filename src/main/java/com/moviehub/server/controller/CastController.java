@@ -31,7 +31,7 @@ public class CastController {
     @Resource
     private ICastService iCastService;
 
-    @GetMapping("/{tmdbId}/casts")
+    @GetMapping("/casts/{tmdbId}")
     public BaseResponse<List<Cast>> getCastsByTmdbId(@PathVariable Long tmdbId) {
         List<Cast> castsByMovies = castRepository.findByMovieTmdbId(tmdbId);
         return BaseResponse.success(castsByMovies);

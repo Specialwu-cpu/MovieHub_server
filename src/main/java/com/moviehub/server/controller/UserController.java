@@ -31,7 +31,6 @@ public class UserController {
     @Resource
     private IVerifyCodeService iVerifyCodeService;
 
-    @PostMapping("/info")
     @Operation(summary = "获取用户信息", description = "根据邮箱或者用户ID获取用户信息")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "获取成功"),
@@ -39,6 +38,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "用户不存在"),
             @ApiResponse(responseCode = "500", description = "服务器内部错误")
     })
+    @GetMapping("/info")
 //    public BaseResponse getUserInfo(@RequestBody Map<String, String> map) {
     public BaseResponse getUserInfo(HttpServletRequest request) {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
@@ -53,16 +53,16 @@ public class UserController {
 //        return iUserService.getUserInfo(map.get("mail_or_id"));
     }
 
-    @PutMapping("/change/info")
+    @PutMapping("/info")
     public BaseResponse updateUser(
             HttpServletRequest request,
             @RequestParam("file") byte[] file,
-            @RequestParam("user_name") String user_name,
-            @RequestParam("style_text") String style_text) {
+            @RequestParam("userName") String userName,
+            @RequestParam("styleText") String styleText) {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
         if (isLoggedIn){
-            return iUserService.updateUser(email, user_name, style_text, file);
+            return iUserService.updateUser(email, userName, styleText, file);
         }
         else {
             System.out.println("我喜欢我");
@@ -71,51 +71,22 @@ public class UserController {
 //        return iUserService.updateUser(map.get("mail_or_id"), map.get("user_name"), map.get("style_text"));
     }
 
-    @PutMapping("/change/avatar")
+    @PutMapping("/avatar")
     public BaseResponse updateAvatar(
             HttpServletRequest request,
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("mail_or_id") String mail_or_id) {
-        return iUserService.updateAvatar(mail_or_id, file);
+            @RequestParam("file") MultipartFile file) {
+        Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
+        String email = (String) request.getAttribute("email");
+        if (isLoggedIn){
+            return iUserService.updateAvatar(email, file);
+        }
+        else {
+            System.out.println("我喜欢我");
+            return BaseResponse.error("请登录");
+        }
+//        return iUserService.updateAvatar(mail_or_id, file);
     }
 
-    /**
-     * @api {Post} /user/loginWithPassword 登录
-     * @apiDescription 登录
-     * @apiGroup UserController
-     * @apiParam {String} mail_or_id 邮箱或者用户名
-     * @apiParam {String} password 密码
-     * @apiSuccessExample {json} Success-Response:
-     * {
-     * "code": 200,
-     * "message": "success",
-     * "data": {
-     * <p>
-     * }
-     * }
-     * @apiErrorExample {json} Error-Response:
-     * {
-     * "code": 400,
-     * "message": "该账号未注册",
-     * "data": null
-     * }
-     * {
-     * "code": 400,
-     * "message": "该账号密码错误",
-     * "data": null
-     * }
-     * {
-     * "code": 400,
-     * "message": "验证码错误",
-     * "data": null
-     * }
-     * {
-     * "code": 400,
-     * "message": "验证码已过期",
-     * "data": null
-     * }
-     * @apiVersion 1.0.0
-     */
     @Operation(summary = "login", description = "login with mail_or_id and password, you should send me request twice time. First time" +
             " with 'mail_or_id'. and i will return you a 'nonce', you should concat nonce with password and use SHA256 hash function" +
             "to generate a cipherText. Second time, you should send me two parameters, one of which is 'mail_or_id', and another is " +
@@ -124,44 +95,23 @@ public class UserController {
                     @Parameter(name = "cipherText", description = "SHA256(nonce + password)")})
     @ApiResponse(responseCode = "200", description = "login success")
     @ApiResponse(responseCode = "400", description = "mail_or_id not exist or password error")
-    @PostMapping(value = "loginWithPassword")
+    @PostMapping(value = "/login")
     public BaseResponse login(@RequestBody Map<String, String> map) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        return iUserService.login(map.get("mail_or_id"), map.get("cipherText"));
+        return iUserService.login(map.get("mailOrId"), map.get("cipherText"));
     }
 
-    /**
-     * @api {POST} /user/register 注册
-     * @apiDescription 注册
-     * @apiGroup UserController
-     * @apiHeader {String} key=desc
-     * @apiParam {type} name desc
-     * @apiParamExample {json} 请求示例:
-     * {
-     * <p>
-     * }
-     * @apiSuccessExample {json} 成功响应:
-     * HTTP/1.1 200 OK
-     * {
-     * "code":"200",
-     * "message":"success",
-     * "data":{
-     * }
-     * }
-     * @apiVersion 1.0.0
-     */
     @Operation(summary = "register", description = "use mail_or_id register",
-            parameters = {@Parameter(name = "mail_or_id", description = "mail or id"),
+            parameters = {@Parameter(name = "mailOrId", description = "mail or id"),
                     @Parameter(name = "password", description = "password"),
-                    @Parameter(name = "user_name", description = "user name"),
-                    @Parameter(name = "verify_code", description = "verify code")})
+                    @Parameter(name = "userName", description = "user name"),
+                    @Parameter(name = "verifyCode", description = "verify code")})
     @ApiResponse(responseCode = "200", description = "register success")
-    @ApiResponse(responseCode = "400", description = "mail_or_id already exist or verify code error or verify code expired")
     @PostMapping(value = "/register")
     public BaseResponse register(@RequestBody Map<String, String> map) {
-        return iUserService.register(map.get("mail_or_id"), map.get("password"), map.get("user_name"), map.get("verify_code"));
+        return iUserService.register(map.get("mailOrId"), map.get("password"), map.get("userName"), map.get("verifyCode"));
     }
 
-    @PostMapping("/reset-password")
+    @PutMapping("/resetPassword")
     @Operation(summary = "重置密码", description = "重置用户密码")
     public BaseResponse resetPassword(HttpServletRequest request, @RequestBody Map<String, String> map) {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
@@ -175,10 +125,10 @@ public class UserController {
         }
     }
 
-    @PostMapping("/forget-password")
+    @PutMapping("/forgetPassword")
     @Operation(summary = "忘记密码", description = "重置用户密码")
     public BaseResponse forgetPassword(@RequestBody Map<String, String> map) {
-        return iUserService.forgetPassword(map.get("mail_or_id"), map.get("newPasswordOne"), map.get("newPasswordTwo"), map.get("verify_code"));
+        return iUserService.forgetPassword(map.get("mailOrId"), map.get("newPasswordOne"), map.get("newPasswordTwo"), map.get("verifyCode"));
     }
 
     //    @Authorization
@@ -187,7 +137,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "send verify code success")
     @ApiResponse(responseCode = "400", description = "email not exist")
     @ApiResponse(responseCode = "500", description = "send verify code failed")
-    @PostMapping(value = "/sendVerifyCode")
+    @GetMapping(value = "/sendVerifyCode")
     public BaseResponse sendVerifyCode(@RequestBody Map<String, String> map) {
         try {
             return iVerifyCodeService.sendVerifyCode(map.get("email"));

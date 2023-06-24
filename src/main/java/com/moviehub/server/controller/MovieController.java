@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/movie")
 @Tag(name = "MovieController", description = "MovieController")
 @CrossOrigin(origins = "*")
 public class MovieController {
@@ -60,7 +60,7 @@ public class MovieController {
             "Or it will return the recommendation for guest",
             parameters = {@Parameter(name = "page", description = "the page you need")})
     @ApiResponse(responseCode = "200", description = "success!")
-    @GetMapping(value = "/choice")
+    @GetMapping(value = "/recommend")
     public BaseResponse getMovieForVisitor(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "0") int page) throws CsvValidationException, IOException, OrtException {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
@@ -75,8 +75,8 @@ public class MovieController {
     }
 
     @GetMapping("/search")
-    public BaseResponse searchMovies(@RequestParam("query") String query) {
-        return iMovieService.searchMoviews(query);
+    public BaseResponse searchMovies(@RequestParam("content") String content) {
+        return iMovieService.searchMoviews(content);
     }
 
 //    @GetMapping("/searchSuggest")
@@ -104,7 +104,7 @@ public class MovieController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = BaseResponse.class)))
             })
-    @PostMapping("/addmovies")
+    @PostMapping("/")
     public BaseResponse addMovie(
             HttpServletRequest request,
             @RequestBody Map<String, String> map) {
@@ -153,8 +153,6 @@ public class MovieController {
 //        return null;
     }
 
-
-    @PutMapping("/{tmdb_id}/update")
     @Operation(summary = "Update a movie",
             parameters = @Parameter(name = "id", description = "The ID of the movie to update", required = true),
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -174,10 +172,10 @@ public class MovieController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = BaseResponse.class)))
             })
+    @PutMapping("/{tmdbId}")
     public BaseResponse updateMovie(
             HttpServletRequest request,
-            @Parameter(description = "The ID of the movie to update", required = true)
-            @PathVariable("tmdb_id") Long tmdbId,
+            @PathVariable("tmdbId") Long tmdbId,
             @RequestBody Map<String, String> map) {
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");
@@ -208,21 +206,21 @@ public class MovieController {
     }
 
     //这个该删。首先没用，其次会影响其他的
-//    @Operation(summary = "Get a movie by tmdb_id")
-//    @GetMapping("/{tmdb_id}")
+//    @Operation(summary = "Get a movie by tmdbId")
+//    @GetMapping("/{tmdbId}")
 //    public ResponseEntity<Movie> getMovieByTmdbId(
-//            @Parameter(in = ParameterIn.PATH, description = "The tmdb_id of the movie", required = true)
-//            @PathVariable("tmdb_id") Long tmdbId) {
+//            @Parameter(in = ParameterIn.PATH, description = "The tmdbId of the movie", required = true)
+//            @PathVariable("tmdbId") Long tmdbId) {
 //        return null;
 //        return iMovieService.getMovieByTmdbId(tmdbId);
 //    }
 
-    @Operation(summary = "Delete a movie by tmdb_id")
-    @DeleteMapping("/{tmdb_id}/delete")
+    @Operation(summary = "Delete a movie by tmdbId")
+    @DeleteMapping("/{tmdbId}")
     public BaseResponse deleteMovieByTmdbId(
             HttpServletRequest request,
-            @Parameter(in = ParameterIn.PATH, description = "The tmdb_id of the movie to delete", required = true)
-            @PathVariable("tmdb_id") Long tmdbId) {
+            @Parameter(in = ParameterIn.PATH, description = "The tmdbId of the movie to delete", required = true)
+            @PathVariable("tmdbId") Long tmdbId) {
 //        return null;
         Boolean isLoggedIn = (Boolean) request.getAttribute("isLoggedIn");
         String email = (String) request.getAttribute("email");

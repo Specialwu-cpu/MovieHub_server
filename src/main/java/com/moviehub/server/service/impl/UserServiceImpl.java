@@ -60,7 +60,6 @@ public class UserServiceImpl implements IUserService {
     @Override
     public BaseResponse login(String mail_or_id, String password) throws IllegalBlockSizeException, BadPaddingException {
         if (!emailInDatabase(mail_or_id)) {
-//            return JsonCreater.getJson(ResponeCode.BadGateway.value, null, "该账号未注册");
             return BaseResponse.error("该账号未注册");
         }
         ValueOperations<String, Object> nonceOfUser = redisTemplate.opsForValue();
@@ -201,9 +200,9 @@ public class UserServiceImpl implements IUserService {
             System.out.println(newPasswordTwo + "!!!!!!!!!" + newPasswordOne);
             return BaseResponse.error("两次输入密码不一致");
         }
-        if (emailInDatabase(mail_or_id)) {
+        if (!emailInDatabase(mail_or_id)) {
 //            return JsonCreater.getJson(ResponeCode.BadGateway.value, null, "该账号已注册");
-            return BaseResponse.error("该账号已注册");
+            return BaseResponse.error("该账号未注册");
         }
         if (invalidPassword(newPasswordOne)){
 //            return JsonCreater.getJson(ResponeCode.BadGateway.value, null, "密码不符合");
@@ -347,14 +346,18 @@ public class UserServiceImpl implements IUserService {
     public BaseResponse addUserHistory(String mailOrId, Long tmdbId) {
         UserHistory userHistory = new UserHistory(mailOrId, tmdbId);
         userHistoryRepository.save(userHistory);
-        return BaseResponse.success();
+        return BaseResponse.success("success");
     }
 
     @Override
     public BaseResponse deleteUserHistory(String mailOrId, Long tmdbId) {
-        UserHistory userHistory = new UserHistory(mailOrId, tmdbId);
-        userHistoryRepository.delete(userHistory);
-        return BaseResponse.success();
+        UserHistory userHistory = userHistoryRepository.findByMailOrIdAndTmdbId(mailOrId, tmdbId);
+        if (userHistory != null) {
+            userHistoryRepository.delete(userHistory);
+            return BaseResponse.success("History deleted successfully.");
+        } else {
+            return BaseResponse.error("History not found.");
+        }
     }
 
     @Override
@@ -362,8 +365,8 @@ public class UserServiceImpl implements IUserService {
         final String key = "user:collection_start" + page;
         HashMap<String, List<Movie>> data = new HashMap<>();
         if (page == 0){
-                List<Movie> movieCollection = movieRepository.findMoviesByCollectionId(mailOrId, 20, 20 * page);
-                data.put("movieCollection", movieCollection);
+            List<Movie> movieCollection = movieRepository.findMoviesByCollectionId(mailOrId, 20, 20 * page);
+            data.put("movieCollection", movieCollection);
             //都给客户端
             return BaseResponse.success(data);
         }
@@ -377,13 +380,17 @@ public class UserServiceImpl implements IUserService {
     public BaseResponse addUserCollection(String mailOrId, Long tmdbId) {
         UserCollection userCollection = new UserCollection(mailOrId, tmdbId);
         userCollectionRepository.save(userCollection);
-        return BaseResponse.success();
+        return BaseResponse.success("success");
     }
 
     @Override
     public BaseResponse deleteUserCollection(String mailOrId, Long tmdbId) {
-        UserCollection userCollection = new UserCollection(mailOrId, tmdbId);
-        userCollectionRepository.delete(userCollection);
-        return BaseResponse.success();
+        UserCollection userCollection = userCollectionRepository.findByMailOrIdAndTmdbId(mailOrId, tmdbId);
+        if (userCollection != null) {
+            userCollectionRepository.delete(userCollection);
+            return BaseResponse.success("Collection deleted successfully.");
+        } else {
+            return BaseResponse.error("Collection not found.");
+        }
     }
 }

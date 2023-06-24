@@ -69,7 +69,7 @@ public class MovieServiceImpl implements IMovieService {
         this.resourceLoader = resourceLoader;
 
 
-        String modelPath = "/usr/local/java/userTower.onnx";
+        String modelPath = "C:\\Users\\DELL\\Desktop\\userTower.onnx";
 
 
         OrtSession.SessionOptions sessionOptions = new OrtSession.SessionOptions();
@@ -158,10 +158,10 @@ public class MovieServiceImpl implements IMovieService {
             }
             List<Movie> recommend = movieRepository.findAllByTmdbIds(tmdbSelected);
             HashMap<String, List<Movie>> data = new HashMap<>();
-            data.put("Popular", popularMovie);
-            data.put("HighestBox", earnMovie);
-            data.put("Today", todayMovie);
-            data.put("Recommend", recommend);
+            data.put("popular", popularMovie);
+            data.put("highestTicket", earnMovie);
+            data.put("historyDay", todayMovie);
+            data.put("recommend", recommend);
             return BaseResponse.success(data);
         }
         else {
